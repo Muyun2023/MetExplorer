@@ -1,3 +1,5 @@
+# README
+
 ## Submission 1: API Selection
 
 ### Selected API
@@ -109,4 +111,11 @@ A Met Explorer that lets users browse museum collections by department, culture,
 - **Random Thought:** Are there any other details users might be interested in on the Artwork Detail screen? How would you display it concisely and cleanly?
 
 #### Tab 2
-- **Design:** The design is detailed and well thought out. The metadata comparison is particularly valuable—users will appreciate the "last updated" feature, which is often missing in a
+- **Design:** The design is detailed and well thought out. The metadata comparison is particularly valuable—users will appreciate the "last updated" feature, which is often missing in apps.
+- **Persistence:** Consider storing some artwork data (e.g., title and small image URL) along with `objectID` to render the list immediately, rather than hitting the backend just to display favorites. Items can be updated when tapped.
+
+### Things to Consider
+- **Stack 2B can reuse Stack 1B's structure** (or a similar View component). See where subviews/components can be reused rather than redesigning from scratch.
+
+### Things to Save for Last
+- **Tag system:** The Tag Selection Dialog, Tag Filter View, and Smart Favorite Button may be more complex than expected. If the "Add to Collection" concept and Favorites list are implemented first, all core assignment requirements will be met. Additional tagging features can be developed afterward.
