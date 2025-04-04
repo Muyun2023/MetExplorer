@@ -3,24 +3,24 @@
 
 import SwiftUI
 
-class DepartmentViewModel: ObservableObject{
+class DepartmentViewModel: ObservableObject {
     @Published var departments: [Department] = []
     @Published var isLoading = false
-    
-    init(){
+
+    init() {
         fetchDepartments()
     }
-    
-    func fetchDepartments(){
+
+    func fetchDepartments() {
         isLoading = true
-        MetMuseumAPI.shared.fetchDepartments{ result in
-            DispatchQueue.main.async{
+        MetMuseumAPI.shared.fetchDepartments { result in
+            DispatchQueue.main.async {
                 self.isLoading = false
                 switch result {
                 case .success(let departments):
                     self.departments = departments
                 case .failure(let error):
-                    print("Erro fetching departments: \(error)")
+                    print("Error fetching departments: \(error)")
                 }
             }
         }
@@ -29,16 +29,16 @@ class DepartmentViewModel: ObservableObject{
 
 struct DepartmentListView: View {
     @StateObject private var viewModel = DepartmentViewModel()
-    
+
     var body: some View {
-        NavigationView{
-            List(viewModel.departments){department in
+        NavigationView {
+            List(viewModel.departments) { department in
                 Text(department.displayName)
             }
             .navigationTitle("Departments")
             .overlay(
-                Group{
-                    if viewModel.isLoading{
+                Group {
+                    if viewModel.isLoading {
                         ProgressView("Loading...")
                     }
                 }
@@ -47,8 +47,8 @@ struct DepartmentListView: View {
     }
 }
 
-struct DepartmentListView_Previews:PreviewProvider{
-    static var previews:some View{
+struct DepartmentListView_Previews: PreviewProvider {
+    static var previews: some View {
         DepartmentListView()
     }
 }

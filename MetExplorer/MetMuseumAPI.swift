@@ -3,43 +3,46 @@
 
 import Foundation
 
-struct API{
-    static let baseURL="https://collectionapi.metmuseum.org/public/collection/v1"
+struct API {
+    static let baseURL = "https://collectionapi.metmuseum.org/public/collection/v1/"
 }
 
-struct Department: Codable, Identifiable{
+struct Department: Codable, Identifiable {
     let departmentId: Int
     let displayName: String
-    var id: Int { departmentId }
+
+    var id: Int { departmentId } // SwiftUI List 需要 `id` 作为唯一标识
 }
 
-class MetMuseumAPI{
+
+class MetMuseumAPI {
     static let shared = MetMuseumAPI()
-    
-    func fetchDepartments(completion:@escaping(Result<[Department], Error>) -> Void){
+
+    func fetchDepartments(completion: @escaping (Result<[Department], Error>) -> Void) {
         let urlString = "\(API.baseURL)departments"
-        guard let url = URL(string: urlString)else {return}
-        
-        URLSession.shared.dataTask(with: url){ data, response, error in
-            if let error = error{
+        guard let url = URL(string: urlString) else { return }
+
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
                 completion(.failure(error))
                 return
             }
-            
+
             guard let data = data else { return }
-            
-            do{
+
+            do {
                 let response = try JSONDecoder().decode(DepartmentResponse.self, from: data)
                 completion(.success(response.departments))
-            }catch{
+            } catch {
                 completion(.failure(error))
             }
         }.resume()
     }
 }
 
-struct DepartmentResponse: Codable{
+struct DepartmentResponse: Codable {
     let departments: [Department]
 }
+
 
 

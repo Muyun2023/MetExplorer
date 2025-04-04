@@ -1,9 +1,5 @@
-//
 //  MetExplorerTests.swift
 //  MetExplorerTests
-//
-//  Created by Muyun Ji on 4/3/25.
-//
 
 import Testing
 @testable import MetExplorer
