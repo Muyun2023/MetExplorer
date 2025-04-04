@@ -40,7 +40,7 @@ struct DepartmentListView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 40, height: 40)
-                        //.font(.title)
+                        .font(.title)
                         .padding()
                     
                     Text(department.displayName)
