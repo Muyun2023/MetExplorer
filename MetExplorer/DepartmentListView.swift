@@ -33,17 +33,44 @@ struct DepartmentListView: View {
     var body: some View {
         NavigationView {
             List(viewModel.departments) { department in
-                Text(department.displayName)
+                //Text(department.displayName)
+                HStack{
+                    //Image(systemName: "photo.fill")
+                    Image(systemName: "paintpalette")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 40, height: 40)
+                        //.font(.title)
+                        .padding()
+                    
+                    Text(department.displayName)
+                        .font(.title3)
+                        .fontWeight(.medium)
+                        .foregroundColor(.primary)
+                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.vertical, 8)
+                    
+                    Spacer()
+                }
+                .background(RoundedRectangle(cornerRadius: 12).fill(Color.white).shadow(radius: 5))
+                .padding(.vertical,4)
             }
+            .listStyle(PlainListStyle())
             .navigationTitle("Departments")
+            .background(Color(UIColor.systemBackground))
             .overlay(
                 Group {
                     if viewModel.isLoading {
-                        ProgressView("Loading...")
+                        ZStack{
+                            Color.black.opacity(0.3).edgesIgnoringSafeArea(.all)
+                            ProgressView("Loading...").progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        }
                     }
                 }
             )
         }
+        .accentColor(.blue)
     }
 }
 
