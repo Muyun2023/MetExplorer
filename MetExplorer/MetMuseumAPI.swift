@@ -10,10 +10,8 @@ struct API {
 struct Department: Codable, Identifiable {
     let departmentId: Int
     let displayName: String
-
-    var id: Int { departmentId } // SwiftUI List 需要 `id` 作为唯一标识
+    var id: Int { departmentId }
 }
-
 
 class MetMuseumAPI {
     static let shared = MetMuseumAPI()
