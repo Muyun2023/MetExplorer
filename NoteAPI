@@ -1,0 +1,89 @@
+//  ReviewNote
+
+Foundation 是一个苹果自带的基础库，提供了很多常用功能，比如 网络请求（URLSession）、数据解析（JSONDecoder），还有很多基础类型如 String, URL, Date 等。
+几乎所有 iOS 项目都要导入这个库。
+
+1. 定义API的地址：API.baseURL
+2. 定义部门的结构体：
+var id:Int
+var id:Int=123
+var id:Int{ return departmentId } 每次访问id，会现做一个，返回结果，所以不是存进去存好的，是动态算出来的，
+这叫switf的计算属性，computed property 也就是这个变量的值不是你直接存进去的，而是每次使用时，它自动去计算/返回别的值。
+var id:Int{ departmentId } swif允许省略return
+
+Codable: Codable 是一个“协议”，表示这个结构可以：
+从 JSON（网站传过来的数据）变成 Swift 的变量
+或者反过来，把变量变成 JSON。
+表示这个结构体可以和 JSON 互相转换（Encode / Decode）——我们才能从网络获取 JSON 后转成 Swift 对象。
+Identifiable: 它是 SwiftUI 用来识别“每一条数据唯一性”的协议，我们只要告诉系统哪个是“唯一标识”
+var id: Int { departmentId }: 实现 Identifiable 要求的 id 字段，这里用 departmentId 来当作 id。
+
+3. 定义网络请求的类
+这里创建了一个“负责发请求的工具类”class 就像：“我要造一个机器”，如“博物馆请求机”。
+只要我们想要请求数据 ：MetMuseumAPI.shared.fetchDepartments(...)
+类用来定义可以保存数据和行为的对象。MetMuseumAPI 类是我们用来管理与博物馆 API 的网络请求的
+这是一个单例（Singleton）模式的实现。shared 是该类的唯一实例（只有一个 MetMuseumAPI 对象）。
+通过 MetMuseumAPI.shared 可以访问这个唯一实例。单例模式通常用于全局需要共享的数据和行为
+static 使得你可以重复使用同一个 URLSession 对象来发起多个请求，而不是每次都创建新的对象。
+
+completion：回调函数”（Callback)，等你请求完数据以后，告诉我结果是‘成功’还是‘失败’”
+回调函数用于异步操作结束时返回结果。
+@escaping 是告诉编译器，这个闭包（回调函数）会在函数执行完后“逃逸”出来，所以它必须使用 @escaping 来标记
+@escaping：表示回调函数可能会“异步执行”（比如过几秒钟网络请求完成之后才调用）。
+
+Result<[Department], Error>) -> Void：
+闭包的类型，它表示回调函数的参数是一个 结果类型（Result）
+Result 代表操作可能成功也可能失败：
+.success([Department])：如果请求成功，返回一个 Department 数组。
+.failure(Error)：如果请求失败，返回一个 Error 错误
+
+"\(API.baseURL)departments"：把基础 URL 和请求的路径拼接起来，构建出完整的 API 请求地址
+guard 是一个条件语句，表示如果条件不成立，就跳出函数并返回。
+在这里，如果 URL 无法创建（可能因为字符串格式不正确），我们就直接返回（退出函数）。
+        
+URLSession.shared.dataTask(with: url)：
+URLSession 是用来进行网络请求的工具，shared 是它的共享实例，dataTask 是用来发送 GET 请求的方法。
+{ data, response, error in：这是一个闭包（closure），它是在请求完成后执行的代码块。它接受三个参数：
+data：服务器返回的数据。网络请求返回的数据，类型是 Data?。
+它是从服务器获取的内容（例如 JSON 格式的响应数据），如果请求成功，data就是你希望处理的实际内容
+response：响应的头信息。包含网络响应的头部信息（例如 HTTP 状态码、响应时间等）。通常是 URLResponse?
+类型，表示响应的元数据。它可以帮助你判断请求是否成功（例如，状态码 200 表示成功）
+error：表示请求是否出错。它的类型是Error?，如果请求过程中发生了错误，比如网络不通或者服务器无法响应，error 就会包含错误信息
+in:是闭包语法的一部分，表示闭包的参数声明部分（即 { data, response, error）和闭包的执行体部分（即 ...）之间的分隔符。
+    
+    
+如果 error 不为 nil，表示请求失败，这时就会进入 if 语句
+guard 是一个条件语句，它会检查 data 是否为 nil，如果是 nil 就退出当前闭包（用 return）
+在闭包中，我们首先检查是否有错误（if let error = error），如果有错误就通过回调函数
+completion(.failure(error)) 报告错误并退出。
+如果没有错误，我们继续检查数据是否有效（guard let data = data else { return }），然后可以进一步处理数据。
+    
+do {} 和 catch {} 是错误处理的语法。do 用来尝试执行一些可能抛出错误的代码，如果出错就会跳到 catch。
+let response = try JSONDecoder().decode(DepartmentResponse.self, from: data)：
+用JSONDecoder 来解析 JSON 数据。decode 方法会把 JSON 数据转成 DepartmentResponse 类型的对象。
+completion(.success(response.departments))：如果解析成功，就通过回调函数返回部门信息。
+completion(.failure(error))：如果解析失败，就通过回调函数返回错误
+
+这是因为 URLSession
+采用的是懒加载的机制：创建了任务（dataTask），但它默认处于“挂起”状态，不会自动启动。
+为了让网络请求执行，必须调用 .resume()。
+如果你没有调用 .resume()，请求就 不会开始，即使你创建了 dataTask。
+.resume() 一旦被调用，网络请求就会
+开始执行，并且请求的结果（成功或者失败）会触发回调闭包的执行（就是{ data, response, error in } 部分）
+
+定义了一个 DepartmentResponse 结构体，表示从服务器获取到的响应数据。它包含一个属性
+departments，是一个 Department 类型的数组（即多个部门）。由于 DepartmentResponse 遵循了 Codable
+协议，它可以很方便地从 JSON 数据中解析出这些部门信息
+
+Codable 是一个协议，表示一个类型可以被编码和解码。也就是说，如果某个类型（例如结构体
+DepartmentResponse）符合 Codable 协议，就可以轻松地将它转换成 JSON 格式的数据，或者将 JSON
+数据转换成该类型的实例。
+编码（Encoding）：将结构体转换为 JSON 数据。
+解码（Decoding）：将 JSON 数据转换为结构体实例。
+DepartmentResponse 结构体的作用是用来表示从服务器返回的数据。它的作用是：
+封装服务器返回的 JSON 数据，特别是 departments 数组。
+它符合 Codable 协议，这使得我们可以利用 JSONDecoder 将 JSON 数据转换为 DepartmentResponse 实例。
+
+decode(DepartmentResponse.self, from: data)
+    第一个参数是类型，不能直接写DepartmentResponse；第二个参数是数据源
+let response这行代码，它指定了你希望将 JSON 数据解码成 DepartmentResponse 类型的对象
