@@ -1,49 +1,46 @@
-//  DepartmentListView.swift
-//  MetExplorer
-
 import SwiftUI
+import Observation
 
-class DepartmentViewModel: ObservableObject {
-    @Published var departments: [Department] = []
-    @Published var isLoading = false
-
+// ViewModel that handles fetching and storing department data
+@Observable
+class DepartmentViewModel {
+    var departments: [Department] = []
+    var isLoading = false // Flag to show loading indicator
+    // Automatically fetch departments when the ViewModel is created
     init() {
-        fetchDepartments()
+        Task {
+            await fetchDepartments()
+        }
     }
 
-    func fetchDepartments() {
+    // Fetch departments using async/await
+    func fetchDepartments() async {
         isLoading = true
-        MetMuseumAPI.shared.fetchDepartments { result in
-            DispatchQueue.main.async {
-                self.isLoading = false
-                switch result {
-                case .success(let departments):
-                    self.departments = departments
-                case .failure(let error):
-                    print("Error fetching departments: \(error)")
-                }
-            }
+        do {
+            let result = try await MetMuseumAPI.shared.fetchDepartments()
+            self.departments = result
+        } catch {
+            print("Error fetching departments: \(error)")
         }
+        isLoading = false
     }
 }
 
+// Main view displaying the list of departments
 struct DepartmentListView: View {
-    @StateObject private var viewModel = DepartmentViewModel()
-
+    @State private var viewModel = DepartmentViewModel()
     var body: some View {
         NavigationView {
             List(viewModel.departments) { department in
-                //Text(department.displayName)
-                HStack{
-                    //Image(systemName: "photo.fill")
-                    Image(systemName: "paintpalette")
+                HStack {
+                    Image(systemName: "paintpalette") //Icon
                         .resizable()
                         .scaledToFit()
                         .frame(width: 40, height: 40)
                         .font(.title)
                         .padding()
                     
-                    Text(department.displayName)
+                    Text(department.displayName) //Information
                         .font(.title3)
                         .fontWeight(.medium)
                         .foregroundColor(.primary)
@@ -54,7 +51,7 @@ struct DepartmentListView: View {
                     Spacer()
                 }
                 .background(RoundedRectangle(cornerRadius: 12).fill(Color.white).shadow(radius: 5))
-                .padding(.vertical,4)
+                .padding(.vertical, 4)
             }
             .listStyle(PlainListStyle())
             .navigationTitle("Departments")
@@ -62,22 +59,19 @@ struct DepartmentListView: View {
             .overlay(
                 Group {
                     if viewModel.isLoading {
-                        ZStack{
+                        ZStack {
                             Color.black.opacity(0.3).edgesIgnoringSafeArea(.all)
-                            ProgressView("Loading...").progressViewStyle(CircularProgressViewStyle(tint: .white))
+                            ProgressView("Loading...")
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
                         }
                     }
                 }
             )
         }
-        .accentColor(.blue)
     }
 }
 
-struct DepartmentListView_Previews: PreviewProvider {
-    static var previews: some View {
-        DepartmentListView()
-    }
+// Preview for SwiftUI canvas
+#Preview {
+    DepartmentListView()
 }
-
-
