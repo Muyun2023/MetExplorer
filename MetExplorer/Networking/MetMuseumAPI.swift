@@ -5,18 +5,6 @@ struct API {
     static let baseURL = "https://collectionapi.metmuseum.org/public/collection/v1/"
 }
 
-// Model for a department returned from the API
-struct Department: Codable, Identifiable {
-    let departmentId: Int         // Unique ID for the department
-    let displayName: String       // Display name of the department
-    var id: Int { departmentId }  // Conform to Identifiable by using departmentId as id
-}
-
-// Model for the full JSON response containing department array
-struct DepartmentResponse: Codable {
-    let departments: [Department]
-}
-
 // Handles network requests to the Met Museum API
 class MetMuseumAPI {
     static let shared = MetMuseumAPI()  // Singleton instance
@@ -34,6 +22,29 @@ class MetMuseumAPI {
         // Decode JSON into DepartmentResponse, then return the departments array
         let response = try JSONDecoder().decode(DepartmentResponse.self, from: data)
         return response.departments
+    }
+}
+
+extension MetMuseumAPI {
+    func fetchObjectIDs(for departmentId: Int) async throws -> [Int] {
+        let urlString = "\(API.baseURL)objects?departmentIds=\(departmentId)"
+        guard let url = URL(string: urlString) else { throw URLError(.badURL) }
+        let (data, _) = try await URLSession.shared.data(from: url)
+        
+        struct ObjectResponse: Codable {
+            let objectIDs: [Int]?
+        }
+        
+        let response = try JSONDecoder().decode(ObjectResponse.self, from: data)
+        return response.objectIDs ?? []
+    }
+
+    func fetchArtwork(by id: Int) async throws -> Artwork {
+        let urlString = "\(API.baseURL)objects/\(id)"
+        guard let url = URL(string: urlString) else { throw URLError(.badURL) }
+        let (data, _) = try await URLSession.shared.data(from: url)
+
+        return try JSONDecoder().decode(Artwork.self, from: data)
     }
 }
 

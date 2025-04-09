@@ -1,5 +1,0 @@
-//  Artwork.swift
-//  MetExplorer
-
-
-
