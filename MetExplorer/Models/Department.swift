@@ -3,7 +3,6 @@
 
 import Foundation
 
-// Model for a department returned from the API
 struct Department: Codable, Identifiable {
     let departmentId: Int         // Unique ID for the department
     let displayName: String       // Display name of the department

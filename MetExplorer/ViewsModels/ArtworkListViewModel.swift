@@ -1,8 +1,8 @@
 //  ArtworkListViewModel.swift
 //  MetExplorer
 
+import Foundation
 import SwiftUI
-import Observation
 
 @Observable
 class ArtworkListViewModel{
@@ -19,7 +19,7 @@ class ArtworkListViewModel{
             let shuffled=ids.shuffled()
             var temp:[Artwork]=[]
             
-            for id in shuffled.prefix(100){
+            for id in shuffled.prefix(50){
                 do{
                     let art=try await MetMuseumAPI.shared.fetchArtwork(by: id)
                     if !art.primaryImageSmall.isEmpty{

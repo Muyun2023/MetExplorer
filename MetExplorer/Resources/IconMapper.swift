@@ -4,7 +4,7 @@
 // Dictionary mapping departmentId to asset image names
 let departmentIcons: [Int: String] = [
     1: "American Decorative Art",
-    //2: "Ancient Near Eastern Art", //?
+    //2: "Ancient Near Eastern Art", //? not work
     3: "Ancient Near Eastern Art",
     4: "Arms and Armor",
     5: "Arts of Africa",

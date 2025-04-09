@@ -3,41 +3,26 @@
 
 import SwiftUI
 
-
-
-
 struct ArtworkListView:View {
     let departmentId: Int
     @State private var viewModel = ArtworkListViewModel()
 
     var body: some View {
-        /**Section {
-            Button(action: {
-                Task {
-                    await viewModel.fetchArtworks(departmentId: departmentId)
-                }
-            }) {
-                HStack {
-                    Image(systemName: "arrow.clockwise")
-                    Text("Shuffle")
-                }
-                .foregroundColor(.blue)
-            }
-            .frame(maxWidth: .infinity, alignment: .center)
-        }*/
-        
         List(viewModel.artworks) { artwork in
-            HStack(alignment: .top) {
-                AsyncImage(url: URL(string: artwork.primaryImageSmall)) { phase in
-                    if let image = phase.image {
-                        image.resizable()
-                    } else {
-                        Color.gray
+            NavigationLink(destination: ArtworkDetailView(objectID:artwork.objectID)){
+                
+                HStack(alignment: .top) {
+                    AsyncImage(url: URL(string: artwork.primaryImageSmall)) { phase in
+                        if let image = phase.image {
+                            image.resizable()
+                        } else {
+                            Color.gray
+                        }
                     }
+                    .frame(width: 60, height: 60)
+                    .cornerRadius(8)
                 }
-                .frame(width: 60, height: 60)
-                .cornerRadius(8)
-
+                
                 VStack(alignment: .leading) {
                     Text(artwork.title)
                         .font(.headline)
