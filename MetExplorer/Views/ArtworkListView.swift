@@ -3,11 +3,29 @@
 
 import SwiftUI
 
+
+
+
 struct ArtworkListView:View {
     let departmentId: Int
     @State private var viewModel = ArtworkListViewModel()
 
     var body: some View {
+        /**Section {
+            Button(action: {
+                Task {
+                    await viewModel.fetchArtworks(departmentId: departmentId)
+                }
+            }) {
+                HStack {
+                    Image(systemName: "arrow.clockwise")
+                    Text("Shuffle")
+                }
+                .foregroundColor(.blue)
+            }
+            .frame(maxWidth: .infinity, alignment: .center)
+        }*/
+        
         List(viewModel.artworks) { artwork in
             HStack(alignment: .top) {
                 AsyncImage(url: URL(string: artwork.primaryImageSmall)) { phase in
@@ -37,6 +55,15 @@ struct ArtworkListView:View {
         .onAppear {
             Task {
                 await viewModel.fetchArtworks(departmentId: departmentId)
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                ShuffledButton{
+                    Task {
+                        await viewModel.fetchArtworks(departmentId: departmentId)
+                    }
+                }
             }
         }
         .overlay {
