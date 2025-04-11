@@ -17,6 +17,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      # Set up Git user for commit
+      - name: Set up Git user
+        run: |
+          git config --global user.name "Muyun2023"
+          git config --global user.email "ji.mu@northeastern.edu"
+
       # Install cloc (Code Line Counter)
       - name: Install cloc
         run: sudo apt-get install cloc
@@ -25,28 +31,12 @@ jobs:
       - name: Run cloc to count lines of code
         run: cloc --json . > code_stats.json
 
-      # Convert cloc JSON output to Markdown
-      - name: Generate Markdown from code stats
-        run: |
-          echo "## Code Stats" > code_stats.md
-          echo "### Total Lines of Code" >> code_stats.md
-          cat code_stats.json | jq '.SUM.code' >> code_stats.md
-
-      # Commit code stats to repository
-      - name: Commit code stats to repository
-        run: |
-          git config --global user.name 'Muyun2023'
-          git config --global user.email 'ji.mu@northeastern.edu'
-          git add code_stats.md
-          git commit -m "🧮 Update code stats"
-          git push
-
-      # Update README with code stats
+      # Generate Markdown and Update README with code stats
       - name: Update README with code stats
         run: |
           echo "## Code Stats" > README.md
           echo "### Total Lines of Code" >> README.md
-          cat code_stats.md >> README.md
+          cat code_stats.json | jq '.SUM.code' >> README.md
           git add README.md
           git commit -m "🧮 Update README with code stats"
           git push
