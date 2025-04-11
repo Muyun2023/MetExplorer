@@ -96,9 +96,11 @@ A Met Explorer that lets users browse museum collections by department, culture,
 
 ---
 
+
+
 # Professor Feedback   
 
-## Whole App Design
+##  Week1 App Design
 
 ### General Feedback
 - This is an excellent and ambitious design for a very fully featured app! You’ve covered the project requirements completely and beyond. Be sure to focus on the minimum product first, then add further features as you have time.
@@ -122,7 +124,7 @@ A Met Explorer that lets users browse museum collections by department, culture,
 
 
 
-## Week1 Feedback
+## Week2 CodesReview
 - Avoid using the ObservableObject protocol, @StateObject, and @Published, as they have largely been replaced by simply using @Observable and @State. By making this shift you set yourself up better to work with Swift Data @Model objects.
   
 - If you switch to Swift 6 language mode (click your xcodeproj in the navigator -> go to the build settings tab -> search for the Swift Language Version entry, set it to Swift 6) you’ll see there are potential concurrency race conditions that are considered compiler errors by the Swift 6 language mode. To avoid these errors and potential race conditions, consider using async/await instead of dispatch queues and callbacks, which is the older way of doing things that async/await has replaced.
