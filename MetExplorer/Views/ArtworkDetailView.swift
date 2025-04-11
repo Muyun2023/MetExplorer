@@ -6,7 +6,14 @@ import SwiftUI
 struct ArtworkDetailView: View {
     let objectID: Int
     @State private var viewModel = ArtworkDetailViewModel()
-
+    
+    @State private var isCollected=false
+    @State private var selectedTag:String?=nil
+    @State private var showTagSelector=false
+    
+    let availableTags=["❤️", "🔥", "🌟", "🧠", "🎨"]
+    
+    
     var body: some View {
         ScrollView {
             if let artwork = viewModel.artwork {
@@ -46,39 +53,53 @@ struct ArtworkDetailView: View {
                             .font(.subheadline)
                     }
                     
-                    //Spacer()
                     Divider()
                     
                     Text("About")
                         .font(.headline)
-
+                    
                     Text(artwork.descriptionText)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                     
-                    /**VStack(alignment: .leading, spacing: 8) {
-                        Text("About this artwork")
+                    Spacer()
+                    
+                    Button(action: {
+                        showTagSelector = true
+                    }) {
+                        Text(isCollected ? (selectedTag ?? "💾") : "Add to Collection")
                             .font(.headline)
-                        
-                        if !artwork.culture.isEmpty {
-                            Text("Culture: \(artwork.culture)")
-                        }
-                        
-                        if !artwork.country.isEmpty {
-                            Text("Country: \(artwork.country)")
-                        }
-                        
-                        if !artwork.creditLine.isEmpty {
-                            Text("Credit Line: \(artwork.creditLine)")
-                        }
-                        
-                        if !artwork.accessionYear.isEmpty {
-                            Text("Acquired in \(artwork.accessionYear)")
-                        }
+                            .foregroundColor(.primary)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color(.secondarySystemBackground))
+                            .cornerRadius(12)
                     }
-                    .font(.subheadline)
-                    .foregroundColor(.accentColor) */
+
+                    
+                    /**VStack(alignment: .leading, spacing: 8) {
+                     Text("About this artwork")
+                     .font(.headline)
+                     
+                     if !artwork.culture.isEmpty {
+                     Text("Culture: \(artwork.culture)")
+                     }
+                     
+                     if !artwork.country.isEmpty {
+                     Text("Country: \(artwork.country)")
+                     }
+                     
+                     if !artwork.creditLine.isEmpty {
+                     Text("Credit Line: \(artwork.creditLine)")
+                     }
+                     
+                     if !artwork.accessionYear.isEmpty {
+                     Text("Acquired in \(artwork.accessionYear)")
+                     }
+                     }
+                     .font(.subheadline)
+                     .foregroundColor(.accentColor) */
                 }
                 .padding()
             } else if viewModel.isLoading {
@@ -96,7 +117,15 @@ struct ArtworkDetailView: View {
                 await viewModel.fetchArtworkDetail(objectID: objectID)
             }
         }
+        .confirmationDialog("Choose a tag", isPresented: $showTagSelector) {
+            ForEach(availableTags, id: \.self) { tag in
+                Button(tag) {
+                    selectedTag = tag
+                    isCollected = true
+                }
+            }
+            Button("Cancel", role: .cancel) {}
+        }
     }
 }
-
 
