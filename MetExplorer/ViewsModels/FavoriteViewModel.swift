@@ -6,7 +6,7 @@ import Observation
 
 @Observable
 class FavoriteViewModel {
-    static let shared = FavoritesManager()
+    static let shared = FavoriteViewModel()
     
     private(set) var favorites: [Int: String] = [:]
     private(set) var recentTags: [String] = []

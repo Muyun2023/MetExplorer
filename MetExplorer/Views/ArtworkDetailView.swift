@@ -5,26 +5,40 @@ import SwiftUI
 
 struct ArtworkDetailView: View {
     let objectID: Int
-    @State private var viewModel = ArtworkDetailViewModel()
     @State private var showTagSelector = false
     @State private var showCustomTagInput = false
     @State private var customTagText = ""
-    
+    @State private var isImageFullScreen = false
+    @State private var viewModel = ArtworkDetailViewModel()
+
     var body: some View {
         ScrollView {
             if let artwork = viewModel.artwork {
                 VStack(alignment: .leading, spacing: 16) {
+                    
+                    // AsyncImage
                     AsyncImage(url: URL(string: artwork.primaryImage)) { phase in
                         if let image = phase.image {
-                            image.resizable().aspectRatio(contentMode: .fit).cornerRadius(12)
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .cornerRadius(12)
+                                .onTapGesture {
+                                    isImageFullScreen = true
+                                }
                         } else {
-                            Color.gray.frame(height: 300).cornerRadius(12)
+                            Color.gray
+                                .frame(height: 300)
+                                .cornerRadius(12)
                         }
                     }
                     
                     Text(artwork.title).font(.title2).bold()
+                    
                     if !artwork.artistDisplayName.isEmpty {
-                        Text(artwork.artistDisplayName).font(.headline).foregroundColor(.secondary)
+                        Text(artwork.artistDisplayName)
+                            .font(.headline)
+                            .foregroundColor(.secondary)
                     }
                     
                     if !artwork.objectDate.isEmpty {
@@ -42,13 +56,9 @@ struct ArtworkDetailView: View {
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                     
-                    // Smart Favorite Button
+                    // Save button
                     Button {
-                        if viewModel.isCollected {
-                            showTagSelector = true // 打开标签管理器
-                        } else {
-                            showTagSelector = true // 打开标签选择器
-                        }
+                        showTagSelector = true
                     } label: {
                         Label(
                             viewModel.isCollected ? "\(viewModel.selectedTag?.emoji ?? "❤️")" : "Add to Collection",
@@ -71,8 +81,8 @@ struct ArtworkDetailView: View {
         .onAppear {
             Task { await viewModel.fetchArtworkDetail(objectID: objectID) }
         }
-        
-        // Tag Selector Dialog
+
+        // Tag Selector Sheet
         .sheet(isPresented: $showTagSelector) {
             NavigationView {
                 List {
@@ -112,8 +122,8 @@ struct ArtworkDetailView: View {
                 }
             }
         }
-        
-        // Custom Tag Input
+
+        // Custom tag
         .alert("New Tag", isPresented: $showCustomTagInput) {
             TextField("Tag name", text: $customTagText)
             Button("Add") {
@@ -123,6 +133,35 @@ struct ArtworkDetailView: View {
                 showTagSelector = false
             }
             Button("Cancel", role: .cancel) {}
+        }
+
+        // Image full screen
+        .fullScreenCover(isPresented: $isImageFullScreen) {
+            ZStack(alignment: .topTrailing) {
+                Color.black.ignoresSafeArea()
+                
+                if let imageURL = URL(string: viewModel.artwork?.primaryImage ?? "") {
+                    AsyncImage(url: imageURL) { phase in
+                        if let image = phase.image {
+                            image
+                                .resizable()
+                                .scaledToFit()
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        } else {
+                            ProgressView().foregroundColor(.white)
+                        }
+                    }
+                }
+                
+                Button {
+                    isImageFullScreen = false
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 30))
+                        .foregroundColor(.white)
+                        .padding()
+                }
+            }
         }
     }
 }
