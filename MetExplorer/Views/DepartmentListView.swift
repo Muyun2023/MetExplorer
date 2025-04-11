@@ -1,3 +1,6 @@
+//  DepartmentListView.swift
+//  MetExplorer
+
 import SwiftUI
 
 // Main view displaying the list of departments
@@ -47,8 +50,4 @@ struct DepartmentListView: View {
     }
 }
 
-// SwiftUI preview
-#Preview {
-    DepartmentListView()
-}
 

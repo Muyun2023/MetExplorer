@@ -1,9 +1,8 @@
-//
 //  DepartmentViewModel.swift
 //  MetExplorer
 
 import Foundation
-import SwiftUI
+import Observation
 
 // ViewModel that handles fetching and storing department data
 @Observable

@@ -2,9 +2,10 @@
 //  MetExplorer
 
 import Foundation
+import Observation
 
 @Observable
-class FavoritesManager {
+class FavoriteViewModel {
     static let shared = FavoritesManager()
     
     private(set) var favorites: [Int: String] = [:]

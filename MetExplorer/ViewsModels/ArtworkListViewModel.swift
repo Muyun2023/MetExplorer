@@ -2,7 +2,7 @@
 //  MetExplorer
 
 import Foundation
-import SwiftUI
+import Observation
 
 @Observable
 class ArtworkListViewModel{
