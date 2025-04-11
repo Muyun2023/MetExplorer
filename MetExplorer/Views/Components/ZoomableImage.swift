@@ -71,8 +71,8 @@ struct ZoomableImage: View {
                     lastOffset = .zero
                 } else {
                     // Zoom in with centered offset
-                    scale = 2
-                    lastScale = 2
+                    scale = 3
+                    lastScale = 3
                 }
             }
     }
