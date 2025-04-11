@@ -35,7 +35,7 @@ jobs:
           git config --global user.email "ji.mu@northeastern.edu"
           git add code_stats.md
           git commit -m "🧮 Update code stats"
-          git push origin code-stats  # Push to a non-protected branch like `code-stats`
+          git push origin main  # Push to a non-protected branch like `code-stats`
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
