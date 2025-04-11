@@ -6,11 +6,6 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		22B45B182DA48DA60056E2F5 /* NoteAPI in Resources */ = {isa = PBXBuildFile; fileRef = 22B45B172DA48D930056E2F5 /* NoteAPI */; };
-		22B45B1A2DA4AC7A0056E2F5 /* NoteDLV in Resources */ = {isa = PBXBuildFile; fileRef = 22B45B192DA4AC6D0056E2F5 /* NoteDLV */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXContainerItemProxy section */
 		2211BC002D9F4ED0009D9760 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -32,8 +27,6 @@
 		2211BBF22D9F4ECD009D9760 /* MetExplorer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetExplorer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2211BBFF2D9F4ED0009D9760 /* MetExplorerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MetExplorerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2211BC092D9F4ED0009D9760 /* MetExplorerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MetExplorerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		22B45B172DA48D930056E2F5 /* NoteAPI */ = {isa = PBXFileReference; lastKnownFileType = text; path = NoteAPI; sourceTree = "<group>"; };
-		22B45B192DA4AC6D0056E2F5 /* NoteDLV */ = {isa = PBXFileReference; lastKnownFileType = text; path = NoteDLV; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -82,8 +75,6 @@
 		2211BBE92D9F4ECD009D9760 = {
 			isa = PBXGroup;
 			children = (
-				22B45B172DA48D930056E2F5 /* NoteAPI */,
-				22B45B192DA4AC6D0056E2F5 /* NoteDLV */,
 				2211BBF42D9F4ECD009D9760 /* MetExplorer */,
 				2211BC022D9F4ED0009D9760 /* MetExplorerTests */,
 				2211BC0C2D9F4ED0009D9760 /* MetExplorerUITests */,
@@ -221,8 +212,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				22B45B1A2DA4AC7A0056E2F5 /* NoteDLV in Resources */,
-				22B45B182DA48DA60056E2F5 /* NoteAPI in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
