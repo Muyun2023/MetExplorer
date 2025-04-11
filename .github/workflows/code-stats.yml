@@ -9,33 +9,44 @@ on:
       - main
 
 jobs:
-  generate-stats:
+  update-code-stats:
     runs-on: ubuntu-latest
+    
     steps:
-      # Checkout code
-      - name: Checkout code
-        uses: actions/checkout@v3
+      # Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      # Install dependencies and count lines
-      - name: Install dependencies and count lines
-        run: |
-          sudo apt-get install -y cloc
-          cloc --exclude-dir=tests --json . > code_stats.json
+      # Install cloc (Code Line Counter)
+      - name: Install cloc
+        run: sudo apt-get install cloc
 
-      # Create Markdown and commit the file
-      - name: Commit and push code stats
+      # Run cloc to count lines of code
+      - name: Run cloc to count lines of code
+        run: cloc --json . > code_stats.json
+
+      # Convert cloc JSON output to Markdown
+      - name: Generate Markdown from code stats
         run: |
-          # Create Markdown file
           echo "## Code Stats" > code_stats.md
           echo "### Total Lines of Code" >> code_stats.md
           cat code_stats.json | jq '.SUM.code' >> code_stats.md
-          
-          # Git commit and push
-          git config --global user.name "Muyun2023"
-          git config --global user.email "ji.mu@northeastern.edu"
+
+      # Commit code stats to repository
+      - name: Commit code stats to repository
+        run: |
+          git config --global user.name 'Muyun2023'
+          git config --global user.email 'ji.mu@northeastern.edu'
           git add code_stats.md
           git commit -m "🧮 Update code stats"
-          git push origin main  # Push to a non-protected branch like `code-stats`
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          git push
 
+      # Update README with code stats
+      - name: Update README with code stats
+        run: |
+          echo "## Code Stats" > README.md
+          echo "### Total Lines of Code" >> README.md
+          cat code_stats.md >> README.md
+          git add README.md
+          git commit -m "🧮 Update README with code stats"
+          git push
