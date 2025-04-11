@@ -12,34 +12,30 @@ jobs:
   generate-stats:
     runs-on: ubuntu-latest
     steps:
-      # Checkout 代码
+      # Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 设置 Git 配置
-      - name: Set up Git
-        run: |
-          git config --global user.name "Muyun2023"
-          git config --global user.email "ji.mu@northeastern.edu"
-
-      # 安装依赖并统计代码行数
+      # Install dependencies and count lines
       - name: Install dependencies and count lines
         run: |
-          # 使用 cloc 工具统计代码行数
           sudo apt-get install -y cloc
           cloc --exclude-dir=tests --json . > code_stats.json
 
-      # 提交和推送统计结果
+      # Create Markdown and commit the file
       - name: Commit and push code stats
         run: |
-          # 读取代码行数并将其转为 Markdown 格式
+          # Create Markdown file
           echo "## Code Stats" > code_stats.md
           echo "### Total Lines of Code" >> code_stats.md
           cat code_stats.json | jq '.SUM.code' >> code_stats.md
           
-          # 提交更新
+          # Git commit and push
+          git config --global user.name "Muyun2023"
+          git config --global user.email "ji.mu@northeastern.edu"
           git add code_stats.md
           git commit -m "🧮 Update code stats"
-          git push
+          git push origin code-stats  # Push to a non-protected branch like `code-stats`
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
