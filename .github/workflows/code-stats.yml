@@ -1,30 +1,45 @@
-name: Update Code Stats
-
-permissions:
-  contents: write  # 👈 添加这一段，允许 bot 写入内容
+name: Code Stats
 
 on:
   push:
-    branches: [ main ]
-  schedule:
-    - cron: '0 0 * * 0' # 每周运行一次
-  workflow_dispatch:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  update-readme:
+  generate-stats:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      # Checkout 代码
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Count lines of code
+      # 设置 Git 配置
+      - name: Set up Git
         run: |
-          bash count_lines.sh > code_stats.md
+          git config --global user.name "Muyun2023"
+          git config --global user.email "ji.mu@northeastern.edu"
 
-      - name: Update README
+      # 安装依赖并统计代码行数
+      - name: Install dependencies and count lines
         run: |
-          sed -i '/<!-- CODE_STATS_START -->/,/<!-- CODE_STATS_END -->/c\<!-- CODE_STATS_START -->\n'"$(cat code_stats.md)"'\n<!-- CODE_STATS_END -->' README.md
+          # 使用 cloc 工具统计代码行数
+          sudo apt-get install -y cloc
+          cloc --exclude-dir=tests --json . > code_stats.json
 
-      - name: Commit and push if changed
+      # 提交和推送统计结果
+      - name: Commit and push code stats
         run: |
-          git config
+          # 读取代码行数并将其转为 Markdown 格式
+          echo "## Code Stats" > code_stats.md
+          echo "### Total Lines of Code" >> code_stats.md
+          cat code_stats.json | jq '.SUM.code' >> code_stats.md
+          
+          # 提交更新
+          git add code_stats.md
+          git commit -m "🧮 Update code stats"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
