@@ -96,24 +96,38 @@ A Met Explorer that lets users browse museum collections by department, culture,
 
 ---
 
-# Professor Feedback
 
-## General Feedback
+
+# Professor Feedback   
+
+##  Week1 App Design
+
+### General Feedback
 - This is an excellent and ambitious design for a very fully featured app! You’ve covered the project requirements completely and beyond. Be sure to focus on the minimum product first, then add further features as you have time.
 - Some areas can be consolidated to save time. See notes in "Things to Consider."
 - "Things to Save for Last" lists features that should be prioritized last to meet requirements first.
 
-## UI Feedback
-### Tab 1
+### UI Feedback
+#### Tab 1
 - **Design:** Great plan for displaying departments, lists of art, and search/filter features. It covers all essential aspects of an app like this.
 - **Random Thought:** Are there any other details users might be interested in on the Artwork Detail screen? How would you display it concisely and cleanly?
 
-### Tab 2
+#### Tab 2
 - **Design:** The design is detailed and well thought out. The metadata comparison is particularly valuable—users will appreciate the "last updated" feature, which is often missing in apps.
 - **Persistence:** Consider storing some artwork data (e.g., title and small image URL) along with `objectID` to render the list immediately, rather than hitting the backend just to display favorites. Items can be updated when tapped.
 
-## Things to Consider
+### Things to Consider
 - **Stack 2B can reuse Stack 1B's structure** (or a similar View component). See where subviews/components can be reused rather than redesigning from scratch.
 
-## Things to Save for Last
+### Things to Save for Last
 - **Tag system:** The Tag Selection Dialog, Tag Filter View, and Smart Favorite Button may be more complex than expected. If the "Add to Collection" concept and Favorites list are implemented first, all core assignment requirements will be met. Additional tagging features can be developed afterward.
+
+
+
+## Week2 CodesReview
+- Avoid using the ObservableObject protocol, @StateObject, and @Published, as they have largely been replaced by simply using @Observable and @State. By making this shift you set yourself up better to work with Swift Data @Model objects.
+  
+- If you switch to Swift 6 language mode (click your xcodeproj in the navigator -> go to the build settings tab -> search for the Swift Language Version entry, set it to Swift 6) you’ll see there are potential concurrency race conditions that are considered compiler errors by the Swift 6 language mode. To avoid these errors and potential race conditions, consider using async/await instead of dispatch queues and callbacks, which is the older way of doing things that async/await has replaced.
+Your error handling is currently primarily either printing to the console or swallowing the error (by returning nil or the like). This is fine for now as you’re just getting started but don’t forget that proper error handling is a requirement for the project.
+
+- So far you’ve got the one screen and one network data model. The screen looks great and loads the data perfectly. That said, you’ll need to move fast to get all of the project requirements done on time (less than 2 weeks left!). You’ve still got a detail page, a tabview with tabs, user interaction, and persistence to complete! Best of luck!

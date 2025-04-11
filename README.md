@@ -1,2 +1,3 @@
-# IOS_Development
-© Muyun Ji. Confidential and Proprietary. All Rights Reserved.
+## Code Stats
+### Total Lines of Code
+1258

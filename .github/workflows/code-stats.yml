@@ -1,0 +1,42 @@
+name: Code Stats
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  update-code-stats:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Set up Git user for commit
+      - name: Set up Git user
+        run: |
+          git config --global user.name "Muyun2023"
+          git config --global user.email "ji.mu@northeastern.edu"
+
+      # Install cloc (Code Line Counter)
+      - name: Install cloc
+        run: sudo apt-get install cloc
+
+      # Run cloc to count lines of code
+      - name: Run cloc to count lines of code
+        run: cloc --json . > code_stats.json
+
+      # Generate Markdown and Update README with code stats
+      - name: Update README with code stats
+        run: |
+          echo "## Code Stats" > README.md
+          echo "### Total Lines of Code" >> README.md
+          cat code_stats.json | jq '.SUM.code' >> README.md
+          git add README.md
+          git commit -m "🧮 Update README with code stats"
+          git push
