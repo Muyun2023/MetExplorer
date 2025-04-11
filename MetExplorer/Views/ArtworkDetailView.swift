@@ -90,11 +90,22 @@ struct ArtworkDetailView: View {
                 List {
                     Section(header: Text("Recent Tags")) {
                         ForEach(viewModel.recentTags, id: \.self) { tag in
-                            Button {
-                                viewModel.toggleFavorite(with: tag)
-                                showTagSelector = false
-                            } label: {
-                                Text("\(tag.emoji) \(tag.name)")
+                            HStack {
+                                Button {
+                                    viewModel.toggleFavorite(with: tag)
+                                    showTagSelector = false
+                                } label: {
+                                    Text("\(tag.emoji) \(tag.name)")
+                                }
+
+                                Spacer()
+
+                                Button {
+                                    viewModel.deleteCustomTag(tag)
+                                } label: {
+                                    Image(systemName: "trash")
+                                        .foregroundColor(.red)
+                                }
                             }
                         }
                     }

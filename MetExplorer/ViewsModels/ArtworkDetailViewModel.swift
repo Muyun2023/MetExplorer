@@ -10,12 +10,12 @@ class ArtworkDetailViewModel {
     var isLoading: Bool = false
     
     var isCollected = false
-        var selectedTag: FavoriteTag?
-        var recentTags: [FavoriteTag] = [
-            FavoriteTag(emoji: "❤️", name: "Favorite"),
-            FavoriteTag(emoji: "🌟", name: "Highlight"),
-            FavoriteTag(emoji: "🎨 ", name: "Inspiration")
-        ]
+    var selectedTag: FavoriteTag?
+    var recentTags: [FavoriteTag] = [
+        FavoriteTag(emoji: "❤️", name: "Favorite"),
+        FavoriteTag(emoji: "🌟", name: "Highlight"),
+        FavoriteTag(emoji: "🎨 ", name: "Inspiration")
+    ]
     
     func fetchArtworkDetail(objectID: Int) async {
         isLoading = true
@@ -29,24 +29,33 @@ class ArtworkDetailViewModel {
     }
     
     func toggleFavorite(with tag: FavoriteTag) {
-            isCollected = true
-            selectedTag = tag
-            updateRecentTags(tag)
-        }
-        
-        func removeFavorite() {
-            isCollected = false
-            selectedTag = nil
-        }
-
-        func updateRecentTags(_ newTag: FavoriteTag) {
-            recentTags.removeAll { $0 == newTag }
-            recentTags.insert(newTag, at: 0)
-            if recentTags.count > 5 {
-                recentTags = Array(recentTags.prefix(5))
-            }
+        isCollected = true
+        selectedTag = tag
+        updateRecentTags(tag)
+    }
+    
+    func removeFavorite() {
+        isCollected = false
+        selectedTag = nil
+    }
+    
+    func updateRecentTags(_ newTag: FavoriteTag) {
+        recentTags.removeAll { $0 == newTag }
+        recentTags.insert(newTag, at: 0)
+        if recentTags.count > 5 {
+            recentTags = Array(recentTags.prefix(5))
         }
     }
+    
+    func deleteCustomTag(_ tag: FavoriteTag) {
+        recentTags.removeAll { $0 == tag }
+        if selectedTag == tag {
+            selectedTag = nil
+            isCollected = false
+        }
+    }
+    
+}
 
 
 
