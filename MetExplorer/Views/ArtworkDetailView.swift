@@ -150,25 +150,34 @@ struct ArtworkDetailView: View {
     
     private func tagSelectionSheet() -> some View {
         NavigationStack {
-            List {
-                Section("Suggested Tags") {
-                    ForEach(viewModel.recentTags, id: \.name) { tag in
-                        Button {
-                            viewModel.toggleFavorite(with: tag)
-                            showTagSelector = false
-                        } label: {
+                List {
+                    Section("My Tags") {
+                        ForEach(viewModel.recentTags, id: \.name) { tag in
                             HStack {
-                                Text(tag.emoji)
-                                Text(tag.name)
-                                Spacer()
-                                if viewModel.isCollected && viewModel.selectedTag == tag {
-                                    Image(systemName: "checkmark")
-                                        .foregroundColor(.accentColor)
+                                Button {
+                                    viewModel.toggleFavorite(with: tag)
+                                    showTagSelector = false
+                                } label: {
+                                    HStack {
+                                        Text(tag.emoji)
+                                        Text(tag.name)
+                                        Spacer()
+                                        if viewModel.isCollected && viewModel.selectedTag == tag {
+                                            Image(systemName: "checkmark")
+                                        }
+                                    }
                                 }
+                                
+                                Button {
+                                    viewModel.deleteTag(tag)
+                                } label: {
+                                    Image(systemName: "trash")
+                                        .foregroundColor(.red)
+                                }
+                                .buttonStyle(.borderless)
                             }
                         }
                     }
-                }
                 
                 Section {
                     Button {
@@ -196,7 +205,6 @@ struct ArtworkDetailView: View {
         .presentationDetents([.medium])
     }
     
-    // MARK: - 操作方法
     private func confirmCustomTag() {
         guard !customTagName.isEmpty else { return }
         let newTag = FavoriteTag(emoji: "🔖", name: customTagName)
@@ -205,7 +213,6 @@ struct ArtworkDetailView: View {
     }
 }
 
-// MARK: - 预览
 //#Preview {
 //    NavigationStack {
 //        ArtworkDetailView(objectID: 436535)

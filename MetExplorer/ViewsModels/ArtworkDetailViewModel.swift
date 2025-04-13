@@ -67,6 +67,17 @@ final class ArtworkDetailViewModel {
         errorMessage = error.localizedDescription
         artwork = nil
     }
+    
+    @MainActor
+    func deleteTag(_ tag: FavoriteTag) {
+        recentTags.removeAll { $0 == tag }
+        if selectedTag == tag {
+            isCollected = false
+            selectedTag = nil
+        }
+        // Add SwiftData Delete later here
+        // try? context.delete(FavoriteTag.byName(tag.name))
+    }
 }
 
 private let demoTags = [
