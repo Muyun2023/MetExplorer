@@ -1,6 +1,75 @@
 import Foundation
 
-// Define API base URL
+enum APIError: Error, LocalizedError {
+    case invalidURL
+    case dataCorrupted
+    case serverError(statusCode: Int)
+    
+    var errorDescription: String? {
+        switch self {
+        case .invalidURL: return "Invalid museum API endpoint"
+        case .dataCorrupted: return "Artwork data might be changed"
+        case .serverError(let code): return "Server error (Code: \(code))"
+        }
+    }
+}
+
+@MainActor
+class MetMuseumAPI {
+    static let shared = MetMuseumAPI()
+    private init() {}
+    
+    private let baseURL = "https://collectionapi.metmuseum.org/public/collection/v1/"
+    
+    private func fetch<T: Decodable>(endpoint: String) async throws -> T {
+        guard let url = URL(string: baseURL + endpoint) else {
+            throw APIError.invalidURL
+        }
+        
+        let (data, response) = try await URLSession.shared.data(from: url)
+        
+        if let httpResponse = response as? HTTPURLResponse,
+           !(200...299).contains(httpResponse.statusCode) {
+            throw APIError.serverError(statusCode: httpResponse.statusCode)
+        }
+        
+        do {
+            return try JSONDecoder().decode(T.self, from: data)
+        } catch {
+            throw APIError.dataCorrupted
+        }
+    }
+    
+    func fetchDepartments() async throws -> [Department] {
+        let response: DepartmentResponse = try await fetch(endpoint: "departments")
+        return response.departments
+    }
+    
+    func fetchObjectIDs(for departmentId: Int) async throws -> [Int] {
+        struct ObjectIDResponse: Decodable {
+            let objectIDs: [Int]?
+        }
+        
+        let response: ObjectIDResponse = try await fetch(endpoint: "objects?departmentIds=\(departmentId)")
+        return response.objectIDs ?? []
+    }
+
+    func fetchArtwork(by id: Int) async throws -> Artwork {
+        try await fetch(endpoint: "objects/\(id)")
+    }
+}
+
+
+
+
+
+
+
+
+
+
+/**
+ // Define API base URL
 struct API {
     static let baseURL = "https://collectionapi.metmuseum.org/public/collection/v1/"
 }
@@ -11,7 +80,7 @@ class MetMuseumAPI {
     
     // Asynchronously fetch departments from the API
     func fetchDepartments() async throws -> [Department] {
-        let urlString = "\(API.baseURL)departments"
+        let urlString = "\(API.baseURL)departments" 
         guard let url = URL(string: urlString) else {
             throw URLError(.badURL)  // Throw an error if URL is invalid
         }
@@ -47,6 +116,7 @@ extension MetMuseumAPI {
         return try JSONDecoder().decode(Artwork.self, from: data)
     }
 }
+ */
 
 
 /**
