@@ -5,6 +5,71 @@ import Foundation
 import Observation
 
 @Observable
+final class ArtworkListViewModel {
+    private(set) var artworks: [Artwork] = []
+    private(set) var isLoading = false
+    private(set) var errorMessage: String?
+    var searchText = ""
+    
+    @MainActor
+    func fetchArtworks(departmentId: Int) async {
+        guard !isLoading else { return }
+        
+        isLoading = true
+        errorMessage = nil
+        
+        do {
+            let ids = try await MetMuseumAPI.shared.fetchObjectIDs(for: departmentId)
+            artworks = try await loadFilteredArtworks(ids: ids.shuffled())
+        } catch {
+            handleError(error)
+        }
+        
+        isLoading = false
+    }
+    
+    var filteredArtworks: [Artwork] {
+        if searchText.isEmpty {
+            return artworks
+        } else {
+            return artworks.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+        }
+    }
+    
+    @MainActor
+    private func loadFilteredArtworks(ids: [Int]) async throws -> [Artwork] {
+        var loadedArtworks: [Artwork] = []
+        
+        for id in ids.prefix(50) {
+            do {
+                let artwork = try await MetMuseumAPI.shared.fetchArtwork(by: id)
+                if !artwork.primaryImageSmall.isEmpty {
+                    loadedArtworks.append(artwork)
+                    if loadedArtworks.count >= 20 { break }
+                }
+            } catch {
+                print("Skipping artwork \(id): \(error.localizedDescription)")
+            }
+        }
+        
+        return loadedArtworks
+    }
+    
+    @MainActor
+    private func handleError(_ error: Error) {
+        if let apiError = error as? APIError {
+            errorMessage = apiError.errorDescription
+        } else {
+            errorMessage = "Failed to load artworks. Please check your search."
+        }
+        artworks = []
+    }
+}
+
+/**import Foundation
+import Observation
+
+@Observable
 class ArtworkListViewModel{
     var artworks:[Artwork]=[]
     var isLoading=false
@@ -39,7 +104,7 @@ class ArtworkListViewModel{
         isLoading=false
     }
     
-}
+} */
     
     
     
