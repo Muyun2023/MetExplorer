@@ -5,7 +5,7 @@ import SwiftUI
 
 // Main view displaying the list of departments
 struct DepartmentListView: View {
-    @State private var viewModel = DepartmentViewModel()
+    private let viewModel = DepartmentViewModel()
     
     var body: some View {
         NavigationView {
@@ -35,19 +35,29 @@ struct DepartmentListView: View {
             .listStyle(PlainListStyle())
             .navigationTitle("Departments")
             .background(Color(UIColor.systemBackground))
-            .overlay(
-                Group {
-                    if viewModel.isLoading {
-                        ZStack {
-                            Color.black.opacity(0.3).edgesIgnoringSafeArea(.all)
-                            ProgressView("Loading...")
-                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                        }
+            .overlay {
+                if viewModel.isLoading {
+                    ProgressView()
+                } else if let error = viewModel.errorMessage {
+                    ErrorView(message: error) {
+                        Task { await viewModel.loadDepartments() }
                     }
                 }
-            )
+            }
+        }
+    }
+    
+    struct ErrorView: View {
+        let message: String
+        var retryAction: () -> Void
+        
+        var body: some View {
+            VStack {
+                Text("⚠️ " + message)
+                    .padding()
+                Button("Retry", action: retryAction)
+                    .buttonStyle(.borderedProminent)
+            }
         }
     }
 }
-
-
