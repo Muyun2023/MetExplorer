@@ -5,6 +5,7 @@ import Foundation
 import Observation
 
 @Observable
+@MainActor
 final class ArtworkDetailViewModel {
     private(set) var artwork: Artwork?
     private(set) var isLoading = false
@@ -13,8 +14,7 @@ final class ArtworkDetailViewModel {
     private(set) var isCollected = false
     private(set) var selectedTag: FavoriteTag?
     private(set) var recentTags: [FavoriteTag] = demoTags
-    
-    @MainActor
+
     func fetchArtworkDetail(objectID: Int) async {
         guard !isLoading else { return }
         
@@ -31,7 +31,6 @@ final class ArtworkDetailViewModel {
         isLoading = false
     }
     
-    @MainActor
     func toggleFavorite(with tag: FavoriteTag) {
         isCollected = true
         selectedTag = tag
@@ -39,13 +38,11 @@ final class ArtworkDetailViewModel {
         // 实际存储操作将在SwiftData迁移后实现
     }
     
-    @MainActor
     func removeFavorite() {
         isCollected = false
         selectedTag = nil
     }
     
-    @MainActor
     private func checkCollectionStatus() {
         //guard let objectID = artwork?.objectID else { return }
         //_ = objectID
@@ -54,7 +51,6 @@ final class ArtworkDetailViewModel {
         selectedTag = nil
     }
     
-    @MainActor
     private func updateRecentTags(_ newTag: FavoriteTag) {
         recentTags.removeAll { $0 == newTag }
         recentTags.insert(newTag, at: 0)
@@ -63,13 +59,11 @@ final class ArtworkDetailViewModel {
         }
     }
     
-    @MainActor
     private func handleError(_ error: Error) {
         errorMessage = error.localizedDescription
         artwork = nil
     }
     
-    @MainActor
     func deleteTag(_ tag: FavoriteTag) {
         recentTags.removeAll { $0 == tag }
         if selectedTag == tag {

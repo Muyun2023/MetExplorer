@@ -5,13 +5,13 @@ import Foundation
 import Observation
 
 @Observable
+@MainActor
 final class ArtworkListViewModel {
     private(set) var artworks: [Artwork] = []
     private(set) var isLoading = false
     private(set) var errorMessage: String?
     var searchText = ""
     
-    @MainActor
     func fetchArtworks(departmentId: Int) async {
         guard !isLoading else { return }
         
@@ -36,7 +36,6 @@ final class ArtworkListViewModel {
         }
     }
     
-    @MainActor
     private func loadFilteredArtworks(ids: [Int]) async throws -> [Artwork] {
         var loadedArtworks: [Artwork] = []
         
@@ -55,7 +54,6 @@ final class ArtworkListViewModel {
         return loadedArtworks
     }
     
-    @MainActor
     private func handleError(_ error: Error) {
         if let apiError = error as? APIError {
             errorMessage = apiError.errorDescription
@@ -105,8 +103,7 @@ class ArtworkListViewModel{
     }
     
 } */
-    
-    
+
     
     /**
      // Some artworks' images are unavilable; checking shows they don't supply Images

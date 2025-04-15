@@ -5,6 +5,7 @@ import Foundation
 import Observation
 
 @Observable
+@MainActor
 final class DepartmentViewModel {
     private(set) var departments: [Department] = []
     private(set) var isLoading = false
@@ -14,7 +15,6 @@ final class DepartmentViewModel {
         Task { await loadDepartments() }
     }
     
-    @MainActor
     func loadDepartments() async {
         guard !isLoading else { return }
         
@@ -31,7 +31,6 @@ final class DepartmentViewModel {
         isLoading = false
     }
     
-    @MainActor
     private func handleError(_ error: Error) {
         if let apiError = error as? APIError {
             errorMessage = apiError.errorDescription

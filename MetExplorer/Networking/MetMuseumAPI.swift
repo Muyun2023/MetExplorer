@@ -14,8 +14,7 @@ enum APIError: Error, LocalizedError {
     }
 }
 
-@MainActor
-class MetMuseumAPI {
+actor MetMuseumAPI {
     static let shared = MetMuseumAPI()
     private init() {}
     
@@ -39,17 +38,17 @@ class MetMuseumAPI {
             throw APIError.dataCorrupted
         }
     }
-    
+
     func fetchDepartments() async throws -> [Department] {
         let response: DepartmentResponse = try await fetch(endpoint: "departments")
         return response.departments
     }
-    
+
     func fetchObjectIDs(for departmentId: Int) async throws -> [Int] {
         struct ObjectIDResponse: Decodable {
             let objectIDs: [Int]?
         }
-        
+
         let response: ObjectIDResponse = try await fetch(endpoint: "objects?departmentIds=\(departmentId)")
         return response.objectIDs ?? []
     }
@@ -58,11 +57,6 @@ class MetMuseumAPI {
         try await fetch(endpoint: "objects/\(id)")
     }
 }
-
-
-
-
-
 
 
 
