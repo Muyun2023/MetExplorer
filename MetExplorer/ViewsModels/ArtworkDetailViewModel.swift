@@ -1,5 +1,6 @@
 //  ArtworkDetailViewModel.swift
 //  MetExplorer
+
 import Foundation
 import Observation
 

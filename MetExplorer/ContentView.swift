@@ -5,7 +5,17 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        DepartmentListView()
+        TabView {
+            DepartmentListView()
+                .tabItem {
+                    Label("Find", systemImage: "magnifyingglass")
+                }
+            
+            CollectionView()
+                .tabItem {
+                    Label("Collection", systemImage: "heart.fill")
+                }
+        }
     }
 }
 

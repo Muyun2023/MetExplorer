@@ -8,9 +8,10 @@ struct DepartmentListView: View {
     private let viewModel = DepartmentViewModel()
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List(viewModel.departments) { department in
-                NavigationLink(destination: ArtworkListView(departmentId: department.departmentId)) {
+                
+                NavigationLink(destination: ArtworkListView(departmentId: department.departmentId,departmentName: department.displayName)) {
                     HStack {
                         Image(iconName(for: department))
                             .resizable()
@@ -31,6 +32,7 @@ struct DepartmentListView: View {
                     .background(RoundedRectangle(cornerRadius: 12).fill(Color.white).shadow(radius: 5))
                     .padding(.vertical, 4)
                 }
+                
             }
             .listStyle(PlainListStyle())
             .navigationTitle("Departments")
@@ -45,6 +47,8 @@ struct DepartmentListView: View {
                 }
             }
         }
+        
+        
     }
     
     struct ErrorView: View {

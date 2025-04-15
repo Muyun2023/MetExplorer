@@ -3,15 +3,20 @@
 
 import Foundation
 
-struct Department: Codable, Identifiable {
-    let departmentId: Int         // Unique ID for the department
-    let displayName: String       // Display name of the department
-    var id: Int { departmentId }  // Conform to Identifiable by using departmentId as id
+// 添加 Hashable 协议一致性
+struct Department: Codable, Identifiable, Hashable {
+    let departmentId: Int
+    let displayName: String
+    var id: Int { departmentId }
+    
+    // 实现 Hashable 协议（自动合成即可）
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(departmentId)
+    }
 }
 
-// Model for the full JSON response containing department array
+// 保持原有 DepartmentResponse
 struct DepartmentResponse: Codable {
     let departments: [Department]
 }
-
 

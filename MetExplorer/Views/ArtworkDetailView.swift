@@ -4,9 +4,8 @@
 import SwiftUI
 
 struct ArtworkDetailView: View {
-    @State private var viewModel = ArtworkDetailViewModel()
     let objectID: Int
-    
+    @State private var viewModel = ArtworkDetailViewModel()
     @State private var showTagSelector = false
     @State private var showCustomTagInput = false
     @State private var customTagName = ""
@@ -75,8 +74,9 @@ struct ArtworkDetailView: View {
                 
                 // 元信息区
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(artwork.title)
-                        .font(.title2.bold())
+                    HTMLText(html: artwork.title)
+                        .font(.headline)
+                        .lineLimit(2)
                     
                     if !artwork.artistDisplayName.isEmpty {
                         Text(artwork.artistDisplayName)

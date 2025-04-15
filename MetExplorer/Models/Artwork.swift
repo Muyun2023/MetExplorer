@@ -1,6 +1,6 @@
 //  Artwork.swift
 //  MetExplorer
-
+ 
 import Foundation
 
 struct Artwork: Identifiable, Codable {
@@ -46,6 +46,7 @@ struct Artwork: Identifiable, Codable {
         return sentence.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
+
 
 
 
