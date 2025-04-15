@@ -3,6 +3,7 @@
 
 import Foundation
 import Observation
+import SwiftData
 
 @Observable
 @MainActor
@@ -10,47 +11,59 @@ final class ArtworkDetailViewModel {
     private(set) var artwork: Artwork?
     private(set) var isLoading = false
     private(set) var errorMessage: String?
-    
+
     private(set) var isCollected = false
     private(set) var selectedTag: FavoriteTag?
     private(set) var recentTags: [FavoriteTag] = demoTags
 
-    func fetchArtworkDetail(objectID: Int) async {
+    func fetchArtworkDetail(objectID: Int, context: ModelContext) async {
         guard !isLoading else { return }
-        
         isLoading = true
         errorMessage = nil
-        
+
         do {
             artwork = try await MetMuseumAPI.shared.fetchArtwork(by: objectID)
-            checkCollectionStatus()
+            checkCollectionStatus(context: context)
         } catch {
             handleError(error)
         }
-        
+
         isLoading = false
     }
-    
+
     func toggleFavorite(with tag: FavoriteTag) {
         isCollected = true
         selectedTag = tag
         updateRecentTags(tag)
-        // 实际存储操作将在SwiftData迁移后实现
     }
-    
+
     func removeFavorite() {
         isCollected = false
         selectedTag = nil
     }
-    
-    private func checkCollectionStatus() {
-        //guard let objectID = artwork?.objectID else { return }
-        //_ = objectID
-        guard artwork != nil else { return }
-        isCollected = false
-        selectedTag = nil
+
+    private func checkCollectionStatus(context: ModelContext) {
+        guard let artwork else { return }
+
+        let idString = String(artwork.objectID)
+
+        do {
+            let existing = try context.fetch(FetchDescriptor<FavoriteItem>(
+                predicate: #Predicate { $0.objectIDString == idString }
+            ))
+
+            if let item = existing.first {
+                isCollected = true
+                selectedTag = FavoriteTag(emoji: "❤️", name: item.tagName)
+            } else {
+                isCollected = false
+                selectedTag = nil
+            }
+        } catch {
+            print("Failed to check collection status: \(error)")
+        }
     }
-    
+
     private func updateRecentTags(_ newTag: FavoriteTag) {
         recentTags.removeAll { $0 == newTag }
         recentTags.insert(newTag, at: 0)
@@ -58,20 +71,18 @@ final class ArtworkDetailViewModel {
             recentTags = Array(recentTags.prefix(5))
         }
     }
-    
-    private func handleError(_ error: Error) {
-        errorMessage = error.localizedDescription
-        artwork = nil
-    }
-    
+
     func deleteTag(_ tag: FavoriteTag) {
         recentTags.removeAll { $0 == tag }
         if selectedTag == tag {
             isCollected = false
             selectedTag = nil
         }
-        // Add SwiftData Delete later here
-        // try? context.delete(FavoriteTag.byName(tag.name))
+    }
+
+    private func handleError(_ error: Error) {
+        errorMessage = error.localizedDescription
+        artwork = nil
     }
 }
 
@@ -80,6 +91,7 @@ private let demoTags = [
     FavoriteTag(emoji: "🌟", name: "Masterpiece"),
     FavoriteTag(emoji: "🎨", name: "Inspiration")
 ]
+
 
 /**import Foundation
 import Observation

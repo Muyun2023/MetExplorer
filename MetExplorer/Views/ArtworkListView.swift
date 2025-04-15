@@ -1,6 +1,3 @@
-//  ArtworkListView.swift
-//  MetExplorer
-
 // Views/ArtworkListView.swift
 //  MetExplorer
 

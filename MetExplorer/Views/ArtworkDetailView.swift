@@ -2,10 +2,14 @@
 //  MetExplorer
 
 import SwiftUI
+import SwiftData
 
 struct ArtworkDetailView: View {
-    let objectID: Int
+    @Environment(\.modelContext) private var modelContext
     @State private var viewModel = ArtworkDetailViewModel()
+    
+    let objectID: Int
+    
     @State private var showTagSelector = false
     @State private var showCustomTagInput = false
     @State private var customTagName = ""
@@ -35,7 +39,7 @@ struct ArtworkDetailView: View {
             }
         }
         .task {
-            await viewModel.fetchArtworkDetail(objectID: objectID)
+            await viewModel.fetchArtworkDetail(objectID: objectID, context: modelContext)
         }
         .sheet(isPresented: $showTagSelector) {
             tagSelectionSheet()
@@ -47,11 +51,9 @@ struct ArtworkDetailView: View {
         }
     }
     
-    // MARK: - 子视图构建
     private func detailContentView(artwork: Artwork) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                // 图片展示区
                 AsyncImage(url: URL(string: artwork.primaryImage)) { phase in
                     if let image = phase.image {
                         image
@@ -72,11 +74,9 @@ struct ArtworkDetailView: View {
                     }
                 }
                 
-                // 元信息区
                 VStack(alignment: .leading, spacing: 8) {
-                    HTMLText(html: artwork.title)
-                        .font(.headline)
-                        .lineLimit(2)
+                    Text(artwork.title)
+                        .font(.title2.bold())
                     
                     if !artwork.artistDisplayName.isEmpty {
                         Text(artwork.artistDisplayName)
@@ -99,7 +99,6 @@ struct ArtworkDetailView: View {
                     }
                 }
                 
-                // 收藏按钮
                 Button(action: { showTagSelector = true }) {
                     HStack {
                         Text(viewModel.isCollected ?
@@ -118,7 +117,6 @@ struct ArtworkDetailView: View {
         .fullScreenCover(isPresented: $isImageFullScreen) {
             ZStack(alignment: .topTrailing) {
                 ZoomableImage(imageURL: URL(string: artwork.primaryImage)!)
-                
                 Button(action: { isImageFullScreen = false }) {
                     Image(systemName: "xmark.circle.fill")
                         .font(.system(size: 30))
@@ -133,8 +131,8 @@ struct ArtworkDetailView: View {
     }
     
     private func infoRow(label: String, value: String) -> some View {
-        Group {
-            if !value.isEmpty {
+        if !value.isEmpty {
+            return AnyView(
                 HStack(alignment: .top) {
                     Text("\(label):")
                         .bold()
@@ -144,40 +142,51 @@ struct ArtworkDetailView: View {
                 }
                 .font(.subheadline)
                 .padding(.vertical, 2)
-            }
+            )
+        } else {
+            return AnyView(EmptyView())
         }
     }
-    
+
     private func tagSelectionSheet() -> some View {
         NavigationStack {
-                List {
-                    Section("My Tags") {
-                        ForEach(viewModel.recentTags, id: \.name) { tag in
-                            HStack {
-                                Button {
-                                    viewModel.toggleFavorite(with: tag)
-                                    showTagSelector = false
-                                } label: {
-                                    HStack {
-                                        Text(tag.emoji)
-                                        Text(tag.name)
-                                        Spacer()
-                                        if viewModel.isCollected && viewModel.selectedTag == tag {
-                                            Image(systemName: "checkmark")
-                                        }
+            List {
+                Section("My Tags") {
+                    ForEach(viewModel.recentTags, id: \.name) { tag in
+                        HStack {
+                            Button {
+                                viewModel.toggleFavorite(with: tag)
+
+//                                let item = FavoriteItem(objectID: objectID, tagName: tag.name)
+//                                try? modelContext.save()
+//                                modelContext.insert(item)
+                                let item = FavoriteItem(objectID: objectID, tagName: tag.name)
+                                // ↓ objectID 是 Int，模型会自动转成 objectIDString: String
+                                modelContext.insert(item)
+                                try? modelContext.save()
+
+                                showTagSelector = false
+                            } label: {
+                                HStack {
+                                    Text(tag.emoji)
+                                    Text(tag.name)
+                                    Spacer()
+                                    if viewModel.isCollected && viewModel.selectedTag == tag {
+                                        Image(systemName: "checkmark")
                                     }
                                 }
-                                
-                                Button {
-                                    viewModel.deleteTag(tag)
-                                } label: {
-                                    Image(systemName: "trash")
-                                        .foregroundColor(.red)
-                                }
-                                .buttonStyle(.borderless)
                             }
+                            
+                            Button {
+                                viewModel.deleteTag(tag)
+                            } label: {
+                                Image(systemName: "trash")
+                                    .foregroundColor(.red)
+                            }
+                            .buttonStyle(.borderless)
                         }
                     }
+                }
                 
                 Section {
                     Button {
@@ -192,6 +201,17 @@ struct ArtworkDetailView: View {
                     Section {
                         Button(role: .destructive) {
                             viewModel.removeFavorite()
+                            
+                            let idString = String(objectID)
+                            if let existing = try? modelContext.fetch(
+                                FetchDescriptor<FavoriteItem>(
+                                    predicate: #Predicate { $0.objectIDString == idString }
+                                )
+                            ).first {
+                                modelContext.delete(existing)
+                                try? modelContext.save()
+                            }
+                            
                             showTagSelector = false
                         } label: {
                             Label("Remove from Collection", systemImage: "trash")
@@ -209,9 +229,24 @@ struct ArtworkDetailView: View {
         guard !customTagName.isEmpty else { return }
         let newTag = FavoriteTag(emoji: "🔖", name: customTagName)
         viewModel.toggleFavorite(with: newTag)
+        
+        let item = FavoriteItem(objectID: objectID, tagName: newTag.name)
+        modelContext.insert(item)
+        try? modelContext.save()
+
         customTagName = ""
     }
 }
+
+    
+//    private func confirmCustomTag() {
+//        guard !customTagName.isEmpty else { return }
+//        let newTag = FavoriteTag(emoji: "🔖", name: customTagName)
+//        viewModel.toggleFavorite(with: newTag)
+//        customTagName = ""
+//    }
+    
+
 
 //#Preview {
 //    NavigationStack {

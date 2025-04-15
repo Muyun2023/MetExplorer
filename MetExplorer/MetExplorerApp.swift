@@ -2,6 +2,7 @@
 //  MetExplorer
 
 import SwiftUI
+import SwiftData
 
 @main
 struct MetExplorerApp: App {
@@ -9,5 +10,7 @@ struct MetExplorerApp: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: FavoriteItem.self) // ✅ 添加这行
     }
 }
+

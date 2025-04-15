@@ -2,9 +2,19 @@
 //  MetExplorer
 
 import SwiftUI
+import SwiftData
+
 
 struct CollectionView: View {
+    @Environment(\.modelContext) private var modelContext
     @State private var viewModel = CollectionViewModel()
+    @Bindable private var bindableViewModel: CollectionViewModel
+
+    init() {
+        let vm = CollectionViewModel()
+        self._viewModel = State(wrappedValue: vm)
+        self._bindableViewModel = Bindable(wrappedValue: vm)
+    }
     
     var body: some View {
         NavigationStack {
@@ -53,8 +63,26 @@ struct CollectionView: View {
                 }
             }
             .refreshable {
-                await viewModel.refreshFavorites()
+                await viewModel.refreshFavorites(context: modelContext)
             }
+//            .refreshable {
+//                await viewModel.refreshFavorites()
+//            }
+            .task {
+                    await viewModel.refreshFavorites(context: modelContext)
+                }
+            .task {
+                do {
+                    let allFavorites = try modelContext.fetch(FetchDescriptor<FavoriteItem>())
+                    print("✅ 当前收藏 SwiftData 中有 \(allFavorites.count) 项")
+                    for item in allFavorites {
+                        print("🎯 收藏 objectID: \(item.objectIDString), tag: \(item.tagName)")
+                    }
+                } catch {
+                    print("❌ SwiftData 读取失败: \(error)")
+                }
+            }
+
         }
     }
 }
