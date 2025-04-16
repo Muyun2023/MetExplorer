@@ -9,6 +9,7 @@ struct CollectionView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel = CollectionViewModel()
     @Bindable private var bindableViewModel: CollectionViewModel
+    
 
     init() {
         let vm = CollectionViewModel()
@@ -74,12 +75,12 @@ struct CollectionView: View {
             .task {
                 do {
                     let allFavorites = try modelContext.fetch(FetchDescriptor<FavoriteItem>())
-                    print("✅ 当前收藏 SwiftData 中有 \(allFavorites.count) 项")
+                    print("✅ Current SwiftData has \(allFavorites.count) 项")
                     for item in allFavorites {
-                        print("🎯 收藏 objectID: \(item.objectIDString), tag: \(item.tagName)")
+                        print("🎯 Save objectID: \(item.objectIDString), tag: \(item.tagName)")
                     }
                 } catch {
-                    print("❌ SwiftData 读取失败: \(error)")
+                    print("❌ SwiftData Read/Get fail: \(error)")
                 }
             }
 

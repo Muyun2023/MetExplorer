@@ -6,15 +6,19 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         TabView {
-            DepartmentListView()
-                .tabItem {
-                    Label("Find", systemImage: "magnifyingglass")
-                }
+            NavigationStack {
+                DepartmentListView()
+            }
+            .tabItem {
+                Label("Find", systemImage: "magnifyingglass")
+            }
             
-            CollectionView()
-                .tabItem {
-                    Label("Collection", systemImage: "heart.fill")
-                }
+            NavigationStack {
+                CollectionView()
+            }
+            .tabItem {
+                Label("Collection", systemImage: "heart.fill")
+            }
         }
     }
 }
