@@ -15,7 +15,15 @@ let departmentIcons: [Int: String] = [
     10: "Egyptian Art",
     11: "European Paintings",
     12: "European Sculpture",
-    13: "Greek and Roman Art"
+    13: "Greek and Roman Art",
+    14: "Islamic Art",
+    15: "The robert lehman collection",
+    16: "The Libraries",
+    17: "Medieval Art",
+    18: "Musical Instruments",
+    19: "Photographs",
+    //20: "Modern Art" //? not work
+    21: "Modern Art"
 ]
 
 // Return the correct icon name for a given department
