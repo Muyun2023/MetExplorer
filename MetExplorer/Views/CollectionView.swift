@@ -60,18 +60,23 @@ struct CollectionView: View {
 
                     // Favorites Section
                     Section("Saved Artworks") {
-                        ForEach(viewModel.favoriteArtworks.filter {
+                        ForEach(items.filter {
                             searchText.isEmpty || $0.title.localizedCaseInsensitiveContains(searchText)
-                        }) { artwork in
+                        }, id: \.objectIDString) { item in
                             NavigationLink {
-                                ArtworkDetailView(objectID: artwork.objectID)
+                                ArtworkDetailView(objectID: Int(item.objectIDString) ?? 0)
                             } label: {
                                 HStack(spacing: 12) {
-                                    AsyncImage(url: URL(string: artwork.primaryImageSmall)) { phase in
+                                    AsyncImage(url: URL(string: item.thumbnailURL ?? "")) { phase in
                                         if let image = phase.image {
                                             image.resizable().scaledToFill()
                                         } else {
-                                            Color.gray.opacity(0.3)
+                                            ZStack {
+                                                Color.gray.opacity(0.2)
+                                                Image(systemName: "photo")
+                                                    .foregroundColor(.gray)
+                                                    .font(.title2)
+                                            }
                                         }
                                     }
                                     .frame(width: 60, height: 60)
@@ -79,13 +84,8 @@ struct CollectionView: View {
                                     .clipped()
 
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text(artwork.title)
+                                        Text(item.title)
                                             .font(.headline)
-                                        if !artwork.artistDisplayName.isEmpty {
-                                            Text(artwork.artistDisplayName)
-                                                .font(.subheadline)
-                                                .foregroundColor(.secondary)
-                                        }
                                     }
 
                                     Spacer()
@@ -102,7 +102,7 @@ struct CollectionView: View {
                 await viewModel.refreshFavorites(context: modelContext)
             }
             .overlay {
-                if viewModel.favoriteArtworks.isEmpty {
+                if items.isEmpty {
                     ContentUnavailableView(
                         "No Favorites Yet",
                         systemImage: "heart.slash",
@@ -116,10 +116,15 @@ struct CollectionView: View {
 
             do {
                 let allFavorites = try modelContext.fetch(FetchDescriptor<FavoriteItem>())
-                print("✅ Current SwiftData has \(allFavorites.count) ")
+                print("✅ Current SwiftData has \(allFavorites.count)")
+//                for item in allFavorites {
+//                    print("🎯 Save objectID: \(item.objectIDString), tag: \(item.tagName)")
+//                }
+                
                 for item in allFavorites {
-                    print("🎯 Save objectID: \(item.objectIDString), tag: \(item.tagName)")
+                    print("🎯 \(item.objectIDString), tag: \(item.tagName), title: \(item.title), url: \(item.thumbnailURL ?? "none")")
                 }
+                
             } catch {
                 print("❌ SwiftData Read/Get fail: \(error)")
             }

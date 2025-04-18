@@ -22,9 +22,9 @@ struct ArtworkDetailView: View {
                 ProgressView("Loading artwork...")
             } else {
                 ContentUnavailableView(
-                    "Failed to Load",
-                    systemImage: "exclamationmark.triangle",
-                    description: Text(viewModel.errorMessage ?? "Please try again later")
+                    "Oops! Something went wrong",
+                    systemImage: "cloud.slash",
+                    description: Text("We couldn’t load this artwork. Please check your connection and try again.")
                 )
             }
         }
@@ -176,8 +176,15 @@ struct ArtworkDetailView: View {
                                 ).first {
                                     existing.tagName = tag.name
                                 } else {
-                                    let newItem = FavoriteItem(objectID: objectID, tagName: tag.name)
-                                    modelContext.insert(newItem)
+                                    if let artwork = viewModel.artwork {
+                                        let newItem = FavoriteItem(
+                                            objectIDString: String(objectID),
+                                            tagName: tag.name,
+                                            title: artwork.title.isEmpty ? "Untitled" : artwork.title,
+                                            thumbnailURL: artwork.primaryImageSmall
+                                        )
+                                        modelContext.insert(newItem)
+                                    }
                                 }
 
                                 try? modelContext.save()
@@ -285,8 +292,16 @@ struct ArtworkDetailView: View {
         ).first {
             existing.tagName = newTag.name
         } else {
-            let item = FavoriteItem(objectID: objectID, tagName: newTag.name)
-            modelContext.insert(item)
+            if let artwork = viewModel.artwork {
+                let item = FavoriteItem(
+                    objectIDString: String(objectID),
+                    tagName: newTag.name,
+                    title: artwork.title.isEmpty ? "Untitled" : artwork.title,
+                    thumbnailURL: artwork.primaryImageSmall
+                )
+                modelContext.insert(item)
+            }
+
         }
 
         try? modelContext.save()

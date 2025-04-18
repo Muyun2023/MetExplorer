@@ -6,20 +6,17 @@ import SwiftData
 
 /// SwiftData model representing a favorited artwork and its associated tag.
 @Model
-final class FavoriteItem {
-    /// The artwork's object ID as a string (stored this way for compatibility with SwiftData/CoreData)
-    var objectIDString: String
-
-    /// The tag name associated with this favorite (e.g., "Favorite", "Cool")
+class FavoriteItem {
+    @Attribute(.unique) var objectIDString: String
     var tagName: String
+    var title: String
+    var thumbnailURL: String?
 
-    init(objectID: Int, tagName: String = "") {
-        self.objectIDString = String(objectID)
+    init(objectIDString: String, tagName: String = "", title: String = "", thumbnailURL: String? = nil) {
+        self.objectIDString = objectIDString
         self.tagName = tagName
-    }
-
-    /// Computed property to convert objectIDString back to Int
-    var objectID: Int {
-        Int(objectIDString) ?? -1
+        self.title = title
+        self.thumbnailURL = thumbnailURL
     }
 }
+

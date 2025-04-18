@@ -60,18 +60,42 @@ struct DepartmentListView: View {
         }
     }
 
-    /// Fallback error view with retry button
+    /// Friendly error UI with retry action
     struct ErrorView: View {
         let message: String
         var retryAction: () -> Void
-        
+
         var body: some View {
-            VStack {
-                Text("⚠️ " + message)
-                    .padding()
-                Button("Retry", action: retryAction)
-                    .buttonStyle(.borderedProminent)
+            VStack(spacing: 16) {
+                Image(systemName: "wifi.slash")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 60, height: 60)
+                    .foregroundColor(.blue.opacity(0.7))
+
+                Text("Oops! Unable to Load")
+                    .font(.title2.bold())
+
+                Text(message)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+
+                Button {
+                    retryAction()
+                } label: {
+                    Label("Try Again", systemImage: "arrow.clockwise.circle.fill")
+                        .font(.headline)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
+                        .background(Color.blue.opacity(0.1))
+                        .cornerRadius(12)
+                }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding()
+            .contentShape(Rectangle())
         }
     }
 }

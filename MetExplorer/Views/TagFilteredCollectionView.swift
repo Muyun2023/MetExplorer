@@ -8,88 +8,59 @@ import SwiftData
 struct TagFilteredCollectionView: View {
     let tag: String
     
-    @Query private var items: [FavoriteItem]
-    @State private var artworks: [Artwork] = []
-    @State private var isLoading = false
-    @State private var didLoad = false  // Prevent multiple loads
+    @Query private var allItems: [FavoriteItem]
+    @State private var refreshToggle = false
+
+    var filteredItems: [FavoriteItem] {
+        allItems.filter { $0.tagName == tag }
+    }
 
     var body: some View {
         List {
-            ForEach(artworks) { artwork in
+            ForEach(filteredItems, id: \.objectIDString) { item in
                 NavigationLink {
-                    ArtworkDetailView(objectID: artwork.objectID)
+                    ArtworkDetailView(objectID: Int(item.objectIDString) ?? 0)
                 } label: {
-                    HStack {
-                        AsyncImage(url: URL(string: artwork.primaryImageSmall)) { phase in
+                    HStack(spacing: 12) {
+                        AsyncImage(url: URL(string: item.thumbnailURL ?? "")) { phase in
                             if let image = phase.image {
                                 image.resizable().scaledToFill()
                             } else {
-                                Color.gray.opacity(0.3)
+                                ZStack {
+                                    Color.gray.opacity(0.2)
+                                    Image(systemName: "photo")
+                                        .foregroundColor(.gray)
+                                }
                             }
                         }
-                        .frame(width: 50, height: 50)
+                        .frame(width: 60, height: 60)
                         .cornerRadius(8)
+                        .clipped()
 
-                        VStack(alignment: .leading) {
-                            Text(artwork.title)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(item.title)
                                 .font(.headline)
-                            if !artwork.artistDisplayName.isEmpty {
-                                Text(artwork.artistDisplayName)
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                            }
                         }
 
                         Spacer()
-                        Text(tag)
+                        Text(item.tagName)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
+                    .padding(.vertical, 4)
                 }
             }
         }
-        .navigationTitle(tag)
+        .navigationTitle("“\(tag)” Collection")
         .navigationBarTitleDisplayMode(.inline)
         .overlay {
-            if isLoading {
-                ProgressView("Loading...")
-            } else if artworks.isEmpty {
+            if filteredItems.isEmpty {
                 ContentUnavailableView(
                     "No Artworks",
-                    systemImage: "star.slash",
-                    description: Text("No artworks found with this tag.")
+                    systemImage: "heart.slash",
+                    description: Text("No artworks found for this tag.")
                 )
             }
         }
-        .onAppear {
-            if !didLoad {
-                didLoad = true
-                Task {
-                    await loadArtworks()
-                }
-            }
-        }
-    }
-
-    /// Loads artworks from the Met API based on filtered FavoriteItems with the given tag.
-    private func loadArtworks() async {
-        isLoading = true
-        
-        // Filter saved favorites by tag
-        let matchingItems = items.filter { $0.tagName == tag }
-        
-        var results: [Artwork] = []
-        for item in matchingItems {
-            if let id = Int(item.objectIDString) {
-                do {
-                    let artwork = try await MetMuseumAPI.shared.fetchArtwork(by: id)
-                    results.append(artwork)
-                } catch {
-                    print("Error loading artwork \(id): \(error)")
-                }
-            }
-        }
-        
-        artworks = results
-        isLoading = false
     }
 }
-
