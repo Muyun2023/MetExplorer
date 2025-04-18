@@ -77,30 +77,78 @@
 ## 📸 App Screenshots
 
 ## 📸 App Screenshots
- 
- <table>
-   <tr>
-     <td><img src="Screenshots/Department.png" width="200px"/></td>
-     <td><img src="Screenshots/Artwork List.png" width="200px"/></td>
-     <td><img src="Screenshots/Artwork Filter.png" width="200px"/></td>
-     <td><img src="Screenshots/Artwork Search.png" width="200px"/></td>
-   </tr>
-   <tr>
-     <td><img src="Screenshots/Artwork Detail 1.png" width="200px"/></td>
-     <td><img src="Screenshots/Artwork Detail 2.png" width="200px"/></td>
-     <td><img src="Screenshots/Artwork Detail 3.png" width="200px"/></td>
-     <td><img src="Screenshots/Artwork Detail 4.png" width="200px"/></td>
-   </tr>
-   <tr>
-     <td><img src="Screenshots/Add to Collection.png" width="200px"/></td>
-     <td><img src="Screenshots/Custom Tag.png" width="200px"/></td>
-     <td><img src="Screenshots/Collection Without Artwork.png" width="200px"/></td>
-     <td><img src="Screenshots/Collection.png" width="200px"/></td>
-   </tr>
-   <tr>
-     <td><img src="Screenshots/Tag Artworks.png" width="200px"/></td>
-     <td><img src="Screenshots/Error Handle 1.png" width="200px"/></td>
-     <td><img src="Screenshots/Error Handle 2.png" width="200px"/></td>
-     <td><img src="Screenshots/App.png" width="200px"/></td>
-   </tr>
- </table>
+
+<table>
+  <tr>
+    <td align="center" style="padding:15px; background:#ffffff">
+      <img src="Screenshots/Department.png" width="200px"/><br/>
+      <sub>Department</sub>
+    </td>
+    <td align="center" style="padding:15px; background:#ffffff">
+      <img src="Screenshots/Artwork List.png" width="200px"/><br/>
+      <sub>Artwork List</sub>
+    </td>
+    <td align="center" style="padding:15px; background:#ffffff">
+      <img src="Screenshots/Artwork Filter.png" width="200px"/><br/>
+      <sub>Artwork Filter</sub>
+    </td>
+    <td align="center" style="padding:15px; background:#ffffff">
+      <img src="Screenshots/Artwork Search.png" width="200px"/><br/>
+      <sub>Artwork Search</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" style="padding:15px; background:#ffffff">
+      <img src="Screenshots/Artwork Detail 1.png" width="200px"/><br/>
+      <sub>Artwork Information</sub>
+    </td>
+    <td align="center" style="padding:15px; background:#ffffff">
+      <img src="Screenshots/Artwork Detail 2.png" width="200px"/><br/>
+      <sub>Artwork Description</sub>
+    </td>
+    <td align="center" style="padding:15px; background:#ffffff">
+      <img src="Screenshots/Artwork Detail 3.png" width="200px"/><br/>
+      <sub>Artwork Image</sub>
+    </td>
+    <td align="center" style="padding:15px; background:#ffffff">
+      <img src="Screenshots/Artwork Detail 4.png" width="200px"/><br/>
+      <sub>Image Zoomable</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" style="padding:15px; background:#ffffff">
+      <img src="Screenshots/Add to Collection.png" width="200px"/><br/>
+      <sub>Add to Collection</sub>
+    </td>
+    <td align="center" style="padding:15px; background:#ffffff">
+      <img src="Screenshots/Custom Tag.png" width="200px"/><br/>
+      <sub>Custom Tag</sub>
+    </td>
+    <td align="center" style="padding:15px; background:#ffffff">
+      <img src="Screenshots/Collection Without Artwork.png" width="200px"/><br/>
+      <sub>Empty Collection</sub>
+    </td>
+    <td align="center" style="padding:15px; background:#ffffff">
+      <img src="Screenshots/Collection.png" width="200px"/><br/>
+      <sub>My Collection</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" style="padding:15px; background:#ffffff">
+      <img src="Screenshots/Tag Artworks.png" width="200px"/><br/>
+      <sub>Tag Filter Artworks</sub>
+    </td>
+    <td align="center" style="padding:15px; background:#ffffff">
+      <img src="Screenshots/Error Handle 1.png" width="200px"/><br/>
+      <sub>Error View</sub>
+    </td>
+    <td align="center" style="padding:15px; background:#ffffff">
+      <img src="Screenshots/Error Handle 2.png" width="200px"/><br/>
+      <sub>Retry on Error</sub>
+    </td>
+    <td align="center" style="padding:15px; background:#ffffff">
+      <img src="Screenshots/App.png" width="200px"/><br/>
+      <sub>App</sub>
+    </td>
+  </tr>
+</table>
