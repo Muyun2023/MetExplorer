@@ -23,7 +23,7 @@ final class ArtworkDetailViewModel {
 
         do {
             artwork = try await MetMuseumAPI.shared.fetchArtwork(by: objectID)
-            checkCollectionStatus(context: context)
+            await checkCollectionStatus(context: context)
         } catch {
             handleError(error)
         }
@@ -31,18 +31,20 @@ final class ArtworkDetailViewModel {
         isLoading = false
     }
 
-    func toggleFavorite(with tag: FavoriteTag) {
+    func toggleFavorite(with tag: FavoriteTag, context: ModelContext) async {
         isCollected = true
         selectedTag = tag
         updateRecentTags(tag)
+        await checkCollectionStatus(context: context)
     }
 
-    func removeFavorite() {
+    func removeFavorite(context: ModelContext) async {
         isCollected = false
         selectedTag = nil
+        await checkCollectionStatus(context: context)
     }
 
-    private func checkCollectionStatus(context: ModelContext) {
+    private func checkCollectionStatus(context: ModelContext) async{
         guard let artwork else { return }
 
         let idString = String(artwork.objectID)

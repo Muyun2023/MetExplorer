@@ -12,7 +12,8 @@ final class CollectionViewModel {
     func refreshFavorites(context: ModelContext) async {
         do {
             let favorites = try context.fetch(FetchDescriptor<FavoriteItem>())
-            let ids = favorites.map { $0.objectID }
+            //let ids = favorites.map { $0.objectID }
+            let ids = favorites.compactMap { Int($0.objectIDString) } // ✅ 避免访问 computed 属性
 
             var loaded: [Artwork] = []
             for id in ids {

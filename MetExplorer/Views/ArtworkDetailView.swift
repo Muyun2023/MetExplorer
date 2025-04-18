@@ -15,6 +15,8 @@ struct ArtworkDetailView: View {
     @State private var customTagName = ""
     @State private var isImageFullScreen = false
     
+    @State private var refreshToggle = false
+    
     var body: some View {
         ZStack {
             if let artwork = viewModel.artwork {
@@ -101,18 +103,28 @@ struct ArtworkDetailView: View {
                 
                 //Button(action: { showTagSelector = true }) {
                 Button(action: {
-                    viewModel.ensureFavoriteExists() 
                     showTagSelector = true
                 }) {
+                    let idString = String(objectID)
+                    let savedTagName = (try? modelContext.fetch(
+                        FetchDescriptor<FavoriteItem>(
+                            predicate: #Predicate { $0.objectIDString == idString }
+                        )
+                    ).first?.tagName) ?? nil
+                    
                     HStack {
-                        Text(viewModel.isCollected ?
-                             "Tagged as \(viewModel.selectedTag?.emoji ?? "❤️")" :
-                             "Add to Collection")
-                        Spacer()
-                        Image(systemName: viewModel.isCollected ? "checkmark.circle.fill" : "plus.circle")
+                        if let tag = savedTagName {
+                            Text("Tagged as \(tag)")
+                            Spacer()
+                            Image(systemName: "checkmark.circle.fill")
+                        } else {
+                            Text("Add to Collection")
+                            Spacer()
+                            Image(systemName: "plus.circle")
+                        }
                     }
                     .padding()
-                    .background(viewModel.isCollected ? Color.green.opacity(0.2) : Color.blue.opacity(0.2))
+                    .background(savedTagName != nil ? Color.green.opacity(0.2) : Color.blue.opacity(0.2))
                     .cornerRadius(10)
                 }
             }
@@ -159,30 +171,64 @@ struct ArtworkDetailView: View {
                     ForEach(viewModel.recentTags, id: \.name) { tag in
                         HStack {
                             Button {
-                                viewModel.toggleFavorite(with: tag)
+                                Task {
+                                    await viewModel.toggleFavorite(with: tag, context: modelContext)
+                                }
+                                let idString = String(objectID)
+                                if let existing = try? modelContext.fetch(
+                                    FetchDescriptor<FavoriteItem>(
+                                        predicate: #Predicate { $0.objectIDString == idString }
+                                    )
+                                ).first {
+                                    existing.tagName = tag.name  // ✅ 如果已存在，更新标签名
+                                } else {
+                                    let newItem = FavoriteItem(objectID: objectID, tagName: tag.name)
+                                    modelContext.insert(newItem) // ✅ 如果不存在，才插入新项
+                                }
 
-//                                let item = FavoriteItem(objectID: objectID, tagName: tag.name)
-//                                try? modelContext.save()
-//                                modelContext.insert(item)
-                                let item = FavoriteItem(objectID: objectID, tagName: tag.name)
-                                // ↓ objectID is Int，模型会自动转成 objectIDString: String
-                                modelContext.insert(item)
                                 try? modelContext.save()
-
+                                refreshToggle.toggle()
                                 showTagSelector = false
                             } label: {
                                 HStack {
                                     Text(tag.emoji)
                                     Text(tag.name)
                                     Spacer()
-                                    if viewModel.isCollected && viewModel.selectedTag == tag {
+                                    let _ = refreshToggle  // ✅ 加这行触发视图更新
+                                    let idString = String(objectID)
+                                    let savedTagName = (try? modelContext.fetch(
+                                        FetchDescriptor<FavoriteItem>(
+                                            predicate: #Predicate { $0.objectIDString == idString }
+                                        )
+                                    ).first?.tagName) ?? nil
+
+                                    if savedTagName == tag.name {
                                         Image(systemName: "checkmark")
                                     }
                                 }
                             }
                             
+//                            Button {
+//                                viewModel.deleteTag(tag)
+//                            } label: {
+//                                Image(systemName: "trash")
+//                                    .foregroundColor(.red)
+//                            }
+                            // when delete the tag directly and artworks will also been deleted from tag
                             Button {
                                 viewModel.deleteTag(tag)
+                                // 👇 如果当前使用的是这个被删的标签，移除收藏状态
+                                let idString = String(objectID)
+                                if let current = try? modelContext.fetch(
+                                    FetchDescriptor<FavoriteItem>(
+                                        predicate: #Predicate { $0.objectIDString == idString }
+                                    )
+                                ).first, current.tagName == tag.name {
+                                    modelContext.delete(current)
+                                    try? modelContext.save()
+                                    refreshToggle.toggle() // ✅ 立即刷新按钮状态
+                                }
+
                             } label: {
                                 Image(systemName: "trash")
                                     .foregroundColor(.red)
@@ -204,7 +250,9 @@ struct ArtworkDetailView: View {
                 if viewModel.isCollected {
                     Section {
                         Button(role: .destructive) {
-                            viewModel.removeFavorite()
+                            Task {
+                                await viewModel.removeFavorite(context: modelContext)
+                            }
                             
                             let idString = String(objectID)
                             if let existing = try? modelContext.fetch(
@@ -214,6 +262,7 @@ struct ArtworkDetailView: View {
                             ).first {
                                 modelContext.delete(existing)
                                 try? modelContext.save()
+                                refreshToggle.toggle()
                             }
                             
                             showTagSelector = false
@@ -232,13 +281,25 @@ struct ArtworkDetailView: View {
     private func confirmCustomTag() {
         guard !customTagName.isEmpty else { return }
         let newTag = FavoriteTag(emoji: "🔖", name: customTagName)
-        viewModel.toggleFavorite(with: newTag)
+        Task {
+            await viewModel.toggleFavorite(with: newTag, context: modelContext)
+        }
         
-        let item = FavoriteItem(objectID: objectID, tagName: newTag.name)
-        modelContext.insert(item)
-        try? modelContext.save()
+        let idString = String(objectID)
+        if let existing = try? modelContext.fetch(
+            FetchDescriptor<FavoriteItem>(
+                predicate: #Predicate { $0.objectIDString == idString }
+            )
+        ).first {
+            existing.tagName = newTag.name
+        } else {
+            let item = FavoriteItem(objectID: objectID, tagName: newTag.name)
+            modelContext.insert(item)
+        }
 
+        try? modelContext.save()
         customTagName = ""
+        refreshToggle.toggle()
     }
 }
 
