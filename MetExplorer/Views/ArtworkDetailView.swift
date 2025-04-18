@@ -216,8 +216,6 @@ struct ArtworkDetailView: View {
 //                            }
                             // when delete the tag directly and artworks will also been deleted from tag
                             Button {
-                                viewModel.deleteTag(tag)
-                                // 👇 如果当前使用的是这个被删的标签，移除收藏状态
                                 let idString = String(objectID)
                                 if let current = try? modelContext.fetch(
                                     FetchDescriptor<FavoriteItem>(
@@ -226,9 +224,9 @@ struct ArtworkDetailView: View {
                                 ).first, current.tagName == tag.name {
                                     modelContext.delete(current)
                                     try? modelContext.save()
-                                    refreshToggle.toggle() // ✅ 立即刷新按钮状态
+                                    refreshToggle.toggle() // ✅ 立即刷新 CollectionView
                                 }
-
+                                viewModel.deleteTag(tag)
                             } label: {
                                 Image(systemName: "trash")
                                     .foregroundColor(.red)
@@ -254,7 +252,6 @@ struct ArtworkDetailView: View {
                                 await viewModel.removeFavorite(context: modelContext)
                             }
 
-                            
                             let idString = String(objectID)
                             if let existing = try? modelContext.fetch(
                                 FetchDescriptor<FavoriteItem>(
@@ -263,13 +260,14 @@ struct ArtworkDetailView: View {
                             ).first {
                                 modelContext.delete(existing)
                                 try? modelContext.save()
-                                refreshToggle.toggle()
+                                refreshToggle.toggle() // ✅ 立即刷新 CollectionView
                             }
-                            
+
                             showTagSelector = false
                         } label: {
                             Label("Remove from Collection", systemImage: "trash")
                         }
+
                     }
                 }
             }

@@ -1,17 +1,17 @@
-//  CollectionView.swift
-//  MetExplorer
-
-//  CollectionView.swift
-//  MetExplorer
-
 import SwiftUI
 import SwiftData
 
 struct CollectionView: View {
     @Environment(\.modelContext) private var modelContext
+    @State private var refreshToggle = false
     @State private var viewModel = CollectionViewModel()
     @Bindable private var bindableViewModel: CollectionViewModel
-    @Query private var items: [FavoriteItem]
+    @Query private var allItems: [FavoriteItem]
+
+    var items: [FavoriteItem] {
+        let _ = refreshToggle // 强制刷新绑定
+        return allItems
+    }
 
     init() {
         let vm = CollectionViewModel()
@@ -22,7 +22,7 @@ struct CollectionView: View {
     var body: some View {
         NavigationStack {
             List {
-                // ✅ Section: 标签过滤区
+                // ✅ 标签过滤区
                 let uniqueTags = Set(items.map { $0.tagName })
                 if !uniqueTags.isEmpty {
                     Section("Tags") {
@@ -43,7 +43,7 @@ struct CollectionView: View {
                     }
                 }
 
-                // ✅ Section: 收藏的作品展示
+                // ✅ 收藏作品展示区
                 ForEach(viewModel.favoriteArtworks) { artwork in
                     NavigationLink {
                         ArtworkDetailView(objectID: artwork.objectID)
@@ -87,20 +87,22 @@ struct CollectionView: View {
             .refreshable {
                 await viewModel.refreshFavorites(context: modelContext)
             }
-            .onAppear {
-                Task {
-                    await viewModel.refreshFavorites(context: modelContext)
-                    do {
-                        let allFavorites = try modelContext.fetch(FetchDescriptor<FavoriteItem>())
-                        print("✅ Current SwiftData has \(allFavorites.count) 项")
-                        for item in allFavorites {
-                            print("🎯 Save objectID: \(item.objectIDString), tag: \(item.tagName)")
-                        }
-                    } catch {
-                        print("❌ SwiftData Read/Get fail: \(error)")
-                    }
+        }
+        // ✅ 自动追踪收藏变化（避免重复加载 or 不刷新的问题）
+        .task(id: items.count) {
+            await viewModel.refreshFavorites(context: modelContext)
+
+            // Optional: 输出调试日志
+            do {
+                let allFavorites = try modelContext.fetch(FetchDescriptor<FavoriteItem>())
+                print("✅ Current SwiftData has \(allFavorites.count) 项")
+                for item in allFavorites {
+                    print("🎯 Save objectID: \(item.objectIDString), tag: \(item.tagName)")
                 }
+            } catch {
+                print("❌ SwiftData Read/Get fail: \(error)")
             }
         }
     }
 }
+
