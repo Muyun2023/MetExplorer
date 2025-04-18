@@ -78,27 +78,75 @@
 
 <table>
   <tr>
-    <td><img src="Screenshots/Department.png" width="200px"/></td>
-    <td><img src="Screenshots/Artwork List.png" width="200px"/></td>
-    <td><img src="Screenshots/Artwork Filter.png" width="200px"/></td>
-    <td><img src="Screenshots/Artwork Search.png" width="200px"/></td>
+    <td align="center" style="padding:10px">
+      <img src="Screenshots/Department.png" width="200px"/><br/>
+      <sub>Department List</sub>
+    </td>
+    <td align="center" style="padding:10px">
+      <img src="Screenshots/Artwork List.png" width="200px"/><br/>
+      <sub>Artwork List</sub>
+    </td>
+    <td align="center" style="padding:10px">
+      <img src="Screenshots/Artwork Filter.png" width="200px"/><br/>
+      <sub>Filter by Medium or Culture</sub>
+    </td>
+    <td align="center" style="padding:10px">
+      <img src="Screenshots/Artwork Search.png" width="200px"/><br/>
+      <sub>Artwork Search</sub>
+    </td>
   </tr>
   <tr>
-    <td><img src="Screenshots/Artwork Detail 1.png" width="200px"/></td>
-    <td><img src="Screenshots/Artwork Detail 2.png" width="200px"/></td>
-    <td><img src="Screenshots/Artwork Detail 3.png" width="200px"/></td>
-    <td><img src="Screenshots/Artwork Detail 4.png" width="200px"/></td>
+    <td align="center" style="padding:10px">
+      <img src="Screenshots/Artwork Detail 1.png" width="200px"/><br/>
+      <sub>Artwork Detail (Main Info)</sub>
+    </td>
+    <td align="center" style="padding:10px">
+      <img src="Screenshots/Artwork Detail 2.png" width="200px"/><br/>
+      <sub>Zoomable Image</sub>
+    </td>
+    <td align="center" style="padding:10px">
+      <img src="Screenshots/Artwork Detail 3.png" width="200px"/><br/>
+      <sub>Artwork Description</sub>
+    </td>
+    <td align="center" style="padding:10px">
+      <img src="Screenshots/Artwork Detail 4.png" width="200px"/><br/>
+      <sub>Metadata Section</sub>
+    </td>
   </tr>
   <tr>
-    <td><img src="Screenshots/Add to Collection.png" width="200px"/></td>
-    <td><img src="Screenshots/Custom Tag.png" width="200px"/></td>
-    <td><img src="Screenshots/Collection Without Artwork.png" width="200px"/></td>
-    <td><img src="Screenshots/Collection.png" width="200px"/></td>
+    <td align="center" style="padding:10px">
+      <img src="Screenshots/Add to Collection.png" width="200px"/><br/>
+      <sub>Add to Collection</sub>
+    </td>
+    <td align="center" style="padding:10px">
+      <img src="Screenshots/Custom Tag.png" width="200px"/><br/>
+      <sub>Create Custom Tag</sub>
+    </td>
+    <td align="center" style="padding:10px">
+      <img src="Screenshots/Collection Without Artwork.png" width="200px"/><br/>
+      <sub>Empty Tag Collection</sub>
+    </td>
+    <td align="center" style="padding:10px">
+      <img src="Screenshots/Collection.png" width="200px"/><br/>
+      <sub>My Collection (List View)</sub>
+    </td>
   </tr>
   <tr>
-    <td><img src="Screenshots/Tag Artworks.png" width="200px"/></td>
-    <td><img src="Screenshots/Error Handle 1.png" width="200px"/></td>
-    <td><img src="Screenshots/Error Handle 2.png" width="200px"/></td>
-    <td><img src="Screenshots/App.png" width="200px"/></td>
+    <td align="center" style="padding:10px">
+      <img src="Screenshots/Tag Artworks.png" width="200px"/><br/>
+      <sub>Tag-Based Filtering</sub>
+    </td>
+    <td align="center" style="padding:10px">
+      <img src="Screenshots/Error Handle 1.png" width="200px"/><br/>
+      <sub>Network Error Prompt</sub>
+    </td>
+    <td align="center" style="padding:10px">
+      <img src="Screenshots/Error Handle 2.png" width="200px"/><br/>
+      <sub>Retry on Error</sub>
+    </td>
+    <td align="center" style="padding:10px">
+      <img src="Screenshots/App.png" width="200px"/><br/>
+      <sub>App Tab View</sub>
+    </td>
   </tr>
 </table>
