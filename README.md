@@ -63,7 +63,7 @@
   2. Ensure the simulator is set to iOS 18.4 or higher
   3. Run the app on iPhone 16 simulator (recommended)
 
-  ## 🧭 Plan TODO
+  ## 🧭 TODO List
   - Improve the **My Collection** page with:
     - Artwork sharing or export functionality
     - Sorting and multi-tag filtering
