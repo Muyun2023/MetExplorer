@@ -63,7 +63,7 @@ struct ArtworkListView: View {
                             .cornerRadius(8)
 
                             VStack(alignment: .leading, spacing: 6) {
-                                HTMLText(html: artwork.title)
+                                HTMLText(html: artwork.title.isEmpty ? "Unnamed Masterpiece" : artwork.title)
                                     .font(.title3.bold())
                                     .foregroundColor(.primary)
                                     .lineLimit(2)
