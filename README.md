@@ -77,90 +77,30 @@
 ## 📸 App Screenshots
 
 ## 📸 App Screenshots
-
-## 📸 App Screenshots
-
-<div align="center">
-
-  <div style="display: inline-block; margin: 20px; text-align: center;">
-    <img src="Screenshots/App.png" width="200px"><br/>
-    <sub>App Tab View</sub>
-  </div>
-
-  <div style="display: inline-block; margin: 20px; text-align: center;">
-    <img src="Screenshots/Department.png" width="200px"><br/>
-    <sub>Department List</sub>
-  </div>
-
-  <div style="display: inline-block; margin: 20px; text-align: center;">
-    <img src="Screenshots/Artwork List.png" width="200px"><br/>
-    <sub>Artwork List</sub>
-  </div>
-
-  <div style="display: inline-block; margin: 20px; text-align: center;">
-    <img src="Screenshots/Artwork Filter.png" width="200px"><br/>
-    <sub>Artwork Filter by Medium or Culture</sub>
-  </div>
-
-  <div style="display: inline-block; margin: 20px; text-align: center;">
-    <img src="Screenshots/Artwork Search.png" width="200px"><br/>
-    <sub>Artwork Search</sub>
-  </div>
-
-  <div style="display: inline-block; margin: 20px; text-align: center;">
-    <img src="Screenshots/Artwork Detail 1.png" width="200px"><br/>
-    <sub>Artwork Information</sub>
-  </div>
-
-  <div style="display: inline-block; margin: 20px; text-align: center;">
-    <img src="Screenshots/Artwork Detail 2.png" width="200px"><br/>
-    <sub>Artwork Description</sub>
-  </div>
-
-  <div style="display: inline-block; margin: 20px; text-align: center;">
-    <img src="Screenshots/Artwork Detail 3.png" width="200px"><br/>
-    <sub>Artwork Image</sub>
-  </div>
-
-  <div style="display: inline-block; margin: 20px; text-align: center;">
-    <img src="Screenshots/Artwork Detail 4.png" width="200px"><br/>
-    <sub>Zoomable Image</sub>
-  </div>
-
-  <div style="display: inline-block; margin: 20px; text-align: center;">
-    <img src="Screenshots/Add to Collection.png" width="200px"><br/>
-    <sub>Add to Collection</sub>
-  </div>
-
-  <div style="display: inline-block; margin: 20px; text-align: center;">
-    <img src="Screenshots/Custom Tag.png" width="200px"><br/>
-    <sub>Create Custom Tag</sub>
-  </div>
-
-  <div style="display: inline-block; margin: 20px; text-align: center;">
-    <img src="Screenshots/Collection Without Artwork.png" width="200px"><br/>
-    <sub>My Collection Empty</sub>
-  </div>
-
-  <div style="display: inline-block; margin: 20px; text-align: center;">
-    <img src="Screenshots/Collection.png" width="200px"><br/>
-    <sub>My Collection</sub>
-  </div>
-
-  <div style="display: inline-block; margin: 20px; text-align: center;">
-    <img src="Screenshots/Tag Artworks.png" width="200px"><br/>
-    <sub>Tag Filtered View</sub>
-  </div>
-
-  <div style="display: inline-block; margin: 20px; text-align: center;">
-    <img src="Screenshots/Error Handle 1.png" width="200px"><br/>
-    <sub>Network Error Prompt</sub>
-  </div>
-
-  <div style="display: inline-block; margin: 20px; text-align: center;">
-    <img src="Screenshots/Error Handle 2.png" width="200px"><br/>
-    <sub>Retry on Error</sub>
-  </div>
-
-</div>
-
+ 
+ <table>
+   <tr>
+     <td><img src="Screenshots/Department.png" width="200px"/></td>
+     <td><img src="Screenshots/Artwork List.png" width="200px"/></td>
+     <td><img src="Screenshots/Artwork Filter.png" width="200px"/></td>
+     <td><img src="Screenshots/Artwork Search.png" width="200px"/></td>
+   </tr>
+   <tr>
+     <td><img src="Screenshots/Artwork Detail 1.png" width="200px"/></td>
+     <td><img src="Screenshots/Artwork Detail 2.png" width="200px"/></td>
+     <td><img src="Screenshots/Artwork Detail 3.png" width="200px"/></td>
+     <td><img src="Screenshots/Artwork Detail 4.png" width="200px"/></td>
+   </tr>
+   <tr>
+     <td><img src="Screenshots/Add to Collection.png" width="200px"/></td>
+     <td><img src="Screenshots/Custom Tag.png" width="200px"/></td>
+     <td><img src="Screenshots/Collection Without Artwork.png" width="200px"/></td>
+     <td><img src="Screenshots/Collection.png" width="200px"/></td>
+   </tr>
+   <tr>
+     <td><img src="Screenshots/Tag Artworks.png" width="200px"/></td>
+     <td><img src="Screenshots/Error Handle 1.png" width="200px"/></td>
+     <td><img src="Screenshots/Error Handle 2.png" width="200px"/></td>
+     <td><img src="Screenshots/App.png" width="200px"/></td>
+   </tr>
+ </table>
