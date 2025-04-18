@@ -56,7 +56,10 @@ struct ArtworkListView: View {
                             VStack(alignment: .leading, spacing: 4) {
                                 HTMLText(html: artwork.title)
                                     .font(.title3.bold())
-                                    .lineLimit(2)
+                                    //.lineLimit(2)
+                                // in case title is too long,show whole title for user
+                                    .lineLimit(nil)
+                                    .fixedSize(horizontal: false, vertical: true)
                                 
                                 if !artwork.artistDisplayName.isEmpty {
                                     Text(artwork.artistDisplayName)

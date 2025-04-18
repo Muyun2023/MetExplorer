@@ -99,7 +99,11 @@ struct ArtworkDetailView: View {
                     }
                 }
                 
-                Button(action: { showTagSelector = true }) {
+                //Button(action: { showTagSelector = true }) {
+                Button(action: {
+                    viewModel.ensureFavoriteExists() 
+                    showTagSelector = true
+                }) {
                     HStack {
                         Text(viewModel.isCollected ?
                              "Tagged as \(viewModel.selectedTag?.emoji ?? "❤️")" :

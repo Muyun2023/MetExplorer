@@ -84,12 +84,20 @@ final class ArtworkDetailViewModel {
         errorMessage = error.localizedDescription
         artwork = nil
     }
+    // ensure the favorite tag not really been deleted and will show again when user re-click my collection button
+    func ensureFavoriteExists() {
+        let favorite = FavoriteTag(emoji: "❤️", name: "Favorite")
+        if !recentTags.contains(favorite) {
+            recentTags.insert(favorite, at: 0)
+            if recentTags.count > 5 {
+                recentTags = Array(recentTags.prefix(5))
+            }
+        }
+    }
 }
 
 private let demoTags = [
     FavoriteTag(emoji: "❤️", name: "Favorite"),
-    FavoriteTag(emoji: "🌟", name: "Masterpiece"),
-    FavoriteTag(emoji: "🎨", name: "Inspiration")
 ]
 
 
