@@ -1,7 +1,3 @@
-## Code Stats
-### Total Lines of Code
-2046
-
 # MetExplorer
 
   MetExplorer is an iOS app that allows users to explore artwork from the Metropolitan Museum of Art (The Met) using their public REST API. Users can browse collections by department, view detailed artwork information, save favorite pieces, and organize their collections using custom tags.
@@ -67,9 +63,13 @@
   2. Ensure the simulator is set to iOS 18.4 or higher
   3. Run the app on iPhone 16 simulator (recommended)
 
-  ## 🧭 Next Steps
+  ## 🧭 Plan TODO
   - Improve the **My Collection** page with:
     - Artwork sharing or export functionality
     - Sorting and multi-tag filtering
     - Visual indicators of tag categories
   - Integrate **Wikipedia**, **ChatGPT API**, or similar sources to generate more **context-rich, interesting** artwork descriptions based on user preferences
+
+  ## Code Stats
+  ### Total Lines of Code
+  2046
