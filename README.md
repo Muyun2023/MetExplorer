@@ -126,7 +126,7 @@
     </td>
     <td align="center" style="padding:15px; background:#ffffff">
       <img src="Screenshots/Collection Without Artwork.png" width="200px"/><br/>
-      <sub>Empty Collection</sub>
+      <sub>My Collection Empty</sub>
     </td>
     <td align="center" style="padding:15px; background:#ffffff">
       <img src="Screenshots/Collection.png" width="200px"/><br/>
@@ -144,7 +144,7 @@
     </td>
     <td align="center" style="padding:15px; background:#ffffff">
       <img src="Screenshots/Error Handle 2.png" width="200px"/><br/>
-      <sub>Retry on Error</sub>
+      <sub>Error View</sub>
     </td>
     <td align="center" style="padding:15px; background:#ffffff">
       <img src="Screenshots/App.png" width="200px"/><br/>
