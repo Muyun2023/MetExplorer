@@ -103,7 +103,7 @@ struct ArtworkListView: View {
                     ProgressView("Loading...")
                 } else if currentFilteredArtworks.isEmpty && !viewModel.isLoading {
                     ContentUnavailableView(
-                        "No Artworks",
+                        "No Artworks With This Information",
                         systemImage: "photo.on.rectangle.angled",
                         description: Text(viewModel.errorMessage ?? "Try another search term")
                     )
@@ -121,23 +121,36 @@ struct ArtworkListView: View {
     }
     
     private var currentFilteredArtworks: [Artwork] {
-        let baseList = viewModel.filteredArtworks(searchText: searchText)
+//        let baseList = viewModel.filteredArtworks(searchText: searchText)
+        let baseList = searchText.isEmpty
+                ? viewModel.artworks
+                : viewModel.artworks.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+
 //        print("🔍 current search key words：\(searchText)")
 //        print("🔍 results number：\(baseList.count)")
         
         switch selectedFilter {
-        case .none:
-            return baseList
+            case .none:
+                return baseList
+//            case .culture:
+//                return baseList
+//                    .filter { !$0.culture.isEmpty }
+//                    .sorted { $0.culture < $1.culture }
         case .culture:
-            return baseList
-                .filter { !$0.culture.isEmpty }
-                .sorted { $0.culture < $1.culture }
-        case .medium:
-            return baseList
-                .filter { !$0.medium.isEmpty }
-                .sorted { $0.medium < $1.medium }
+            let filtered = baseList.filter {
+                let trimmed = $0.culture.trimmingCharacters(in: .whitespacesAndNewlines)
+                print("🎯 culture = '\(trimmed)'")
+                return !trimmed.isEmpty
+            }
+            print("🧮 Culture matched artworks: \(filtered.count)")
+            return filtered.sorted { $0.culture < $1.culture }
+
+            case .medium:
+                return baseList
+                    .filter { !$0.medium.isEmpty }
+                    .sorted { $0.medium < $1.medium }
+            }
         }
-    }
     
     private func groupingText(for artwork: Artwork) -> String {
         switch selectedFilter {

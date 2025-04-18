@@ -36,13 +36,13 @@ final class ArtworkListViewModel {
         }
     }
     
-    func filteredArtworks(searchText: String) -> [Artwork] {
-        if searchText.isEmpty {
-            return artworks
-        } else {
-            return artworks.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
-        }
-    }
+//    func filteredArtworks(searchText: String) -> [Artwork] {
+//        if searchText.isEmpty {
+//            return artworks
+//        } else {
+//            return artworks.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+//        }
+//    }
     
     private func loadFilteredArtworks(ids: [Int]) async throws -> [Artwork] {
         var loadedArtworks: [Artwork] = []
