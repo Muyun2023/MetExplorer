@@ -19,7 +19,14 @@ struct ArtworkListView: View {
     @State private var searchText = ""
     
     var body: some View {
-        NavigationStack {
+        VStack(alignment: .leading, spacing: 4){
+            Text(departmentName)
+                .font(.title3.bold())
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal)
+                .padding(.top, 8)
+            
             //.Searchable not work probably due to simulator bug,repalce with TextFile
             TextField("Search manually", text: $searchText)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -55,7 +62,7 @@ struct ArtworkListView: View {
                             
                             VStack(alignment: .leading, spacing: 4) {
                                 HTMLText(html: artwork.title)
-                                    .font(.title3.bold())
+                                    .font(.title3)
                                     //.lineLimit(2)
                                 // in case title is too long,show whole title for user
                                     .lineLimit(nil)
@@ -78,8 +85,9 @@ struct ArtworkListView: View {
                     }
                 }
             }
-            .navigationTitle(departmentName)
-            .navigationBarTitleDisplayMode(.inline)
+//            .navigationTitle(departmentName)
+//            .navigationBarTitleDisplayMode(.inline)
+            
 //            .searchable(text: $searchText, prompt: "Search artworks")
 //            .onChange(of: searchText) { _, _ in }
             .toolbar {
