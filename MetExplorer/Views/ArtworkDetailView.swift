@@ -76,7 +76,7 @@ struct ArtworkDetailView: View {
                 
                 VStack(alignment: .leading, spacing: 8) {
                     Text(artwork.title)
-                        .font(.title2.bold())
+                        .font(.title3.bold())
                     
                     if !artwork.artistDisplayName.isEmpty {
                         Text(artwork.artistDisplayName)
@@ -161,7 +161,7 @@ struct ArtworkDetailView: View {
 //                                try? modelContext.save()
 //                                modelContext.insert(item)
                                 let item = FavoriteItem(objectID: objectID, tagName: tag.name)
-                                // ↓ objectID 是 Int，模型会自动转成 objectIDString: String
+                                // ↓ objectID is Int，模型会自动转成 objectIDString: String
                                 modelContext.insert(item)
                                 try? modelContext.save()
 

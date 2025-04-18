@@ -1,5 +1,5 @@
 // Views/ArtworkListView.swift
-//  MetExplorer
+// MetExplorer
 
 import SwiftUI
 
@@ -20,22 +20,24 @@ struct ArtworkListView: View {
     
     var body: some View {
         NavigationStack {
+            //.Searchable not work probably due to simulator bug,repalce with TextFile
             TextField("Search manually", text: $searchText)
-                    .textFieldStyle(.roundedBorder)
-                    .padding()
-            List {
-                // 过滤控件
-                Section {
-                    Picker("Filter By", selection: $selectedFilter) {
-                        ForEach(FilterOption.allCases, id: \.self) { option in
-                            Text(option.rawValue).tag(option)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .padding(.vertical, 8)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding(.horizontal)
+                .padding(.top,6)
+            
+            // 过滤控件
+            Picker("Filter By", selection: $selectedFilter) {
+                ForEach(FilterOption.allCases, id: \.self) { option in
+                    Text(option.rawValue).tag(option)
                 }
+            }
+            .pickerStyle(.segmented)
+            .padding(.horizontal, 16)
+            .padding(.bottom, 2)
                 
-                // 艺术品列表
+            // 艺术品列表
+            List {
                 ForEach(currentFilteredArtworks) { artwork in
                     NavigationLink(destination: ArtworkDetailView(objectID: artwork.objectID)) {
                         HStack(alignment: .top, spacing: 12) {
@@ -52,8 +54,8 @@ struct ArtworkListView: View {
                             .cornerRadius(8)
                             
                             VStack(alignment: .leading, spacing: 4) {
-                                HTMLText(html: artwork.title) // 处理 HTML 标签
-                                    .font(.headline)
+                                HTMLText(html: artwork.title)
+                                    .font(.title3.bold())
                                     .lineLimit(2)
                                 
                                 if !artwork.artistDisplayName.isEmpty {
@@ -120,8 +122,8 @@ struct ArtworkListView: View {
     
     private var currentFilteredArtworks: [Artwork] {
         let baseList = viewModel.filteredArtworks(searchText: searchText)
-        print("🔍 当前搜索关键词：\(searchText)")
-        print("🔍 搜索结果数量：\(baseList.count)")
+//        print("🔍 current search key words：\(searchText)")
+//        print("🔍 results number：\(baseList.count)")
         
         switch selectedFilter {
         case .none:
