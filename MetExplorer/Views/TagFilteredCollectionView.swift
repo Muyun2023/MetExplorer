@@ -1,6 +1,5 @@
 //  TagFilteredCollectionView.swift
 //  MetExplorer
-//
 
 import SwiftUI
 import SwiftData
@@ -10,6 +9,7 @@ struct TagFilteredCollectionView: View {
     @Query private var items: [FavoriteItem]
     @State private var artworks: [Artwork] = []
     @State private var isLoading = false
+    @State private var didLoad = false  // ✅ 确保只加载一次
 
     var body: some View {
         List {
@@ -57,8 +57,14 @@ struct TagFilteredCollectionView: View {
                 )
             }
         }
-        .task {
-            await loadArtworks()
+        .onAppear {
+            // ✅ 避免反复调用
+            if !didLoad {
+                didLoad = true
+                Task {
+                    await loadArtworks()
+                }
+            }
         }
     }
 

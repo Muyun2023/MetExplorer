@@ -16,7 +16,7 @@ final class FavoriteItem {
         self.tagName = tagName
     }
 
-//    var objectID: Int {
-//        Int(objectIDString) ?? -1
-//    }
+    var objectID: Int {
+        Int(objectIDString) ?? -1
+    }
 }

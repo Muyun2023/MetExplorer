@@ -253,6 +253,7 @@ struct ArtworkDetailView: View {
                             Task {
                                 await viewModel.removeFavorite(context: modelContext)
                             }
+
                             
                             let idString = String(objectID)
                             if let existing = try? modelContext.fetch(

@@ -1,9 +1,11 @@
 //  CollectionView.swift
 //  MetExplorer
 
+//  CollectionView.swift
+//  MetExplorer
+
 import SwiftUI
 import SwiftData
-
 
 struct CollectionView: View {
     @Environment(\.modelContext) private var modelContext
@@ -16,7 +18,7 @@ struct CollectionView: View {
         self._viewModel = State(wrappedValue: vm)
         self._bindableViewModel = Bindable(wrappedValue: vm)
     }
-    
+
     var body: some View {
         NavigationStack {
             List {
@@ -68,7 +70,6 @@ struct CollectionView: View {
                             }
 
                             Spacer()
-//                            Text(viewModel.tagEmoji(for: artwork.objectID))
                         }
                     }
                 }
@@ -86,30 +87,20 @@ struct CollectionView: View {
             .refreshable {
                 await viewModel.refreshFavorites(context: modelContext)
             }
-//            .refreshable {
-//                await viewModel.refreshFavorites()
-//            }
-            .task {
+            .onAppear {
+                Task {
                     await viewModel.refreshFavorites(context: modelContext)
-                }
-            .task {
-                do {
-                    let allFavorites = try modelContext.fetch(FetchDescriptor<FavoriteItem>())
-                    print("✅ Current SwiftData has \(allFavorites.count) 项")
-                    for item in allFavorites {
-                        print("🎯 Save objectID: \(item.objectIDString), tag: \(item.tagName)")
+                    do {
+                        let allFavorites = try modelContext.fetch(FetchDescriptor<FavoriteItem>())
+                        print("✅ Current SwiftData has \(allFavorites.count) 项")
+                        for item in allFavorites {
+                            print("🎯 Save objectID: \(item.objectIDString), tag: \(item.tagName)")
+                        }
+                    } catch {
+                        print("❌ SwiftData Read/Get fail: \(error)")
                     }
-                } catch {
-                    print("❌ SwiftData Read/Get fail: \(error)")
                 }
             }
-
         }
     }
 }
-
-//// 预览（模拟数据）
-//#Preview {
-//    CollectionView()
-//}
-
