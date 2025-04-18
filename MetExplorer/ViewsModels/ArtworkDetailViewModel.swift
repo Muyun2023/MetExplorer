@@ -96,6 +96,17 @@ final class ArtworkDetailViewModel {
             }
         }
     }
+    
+    func loadUserTags(from context: ModelContext) async {
+            do {
+                let items = try context.fetch(FetchDescriptor<UserTag>())
+                let tags = items.map { FavoriteTag(emoji: $0.emoji, name: $0.name) }
+                self.recentTags = tags
+            } catch {
+                print("Failed to load user tags: \(error)")
+            }
+            ensureFavoriteExists()
+        }
 }
 
 private let demoTags = [

@@ -7,7 +7,6 @@ import SwiftData
 
 @Model
 final class FavoriteItem {
-    // 🧩 用 String 代替 Int，避免 CoreData 类型不兼容
     var objectIDString: String
     var tagName: String
 

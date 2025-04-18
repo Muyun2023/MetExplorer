@@ -41,7 +41,8 @@ struct ArtworkDetailView: View {
             }
         }
         .task {
-            await viewModel.fetchArtworkDetail(objectID: objectID, context: modelContext)
+            await viewModel.loadUserTags(from: modelContext) // ✅ 加载标签（新的）
+            await viewModel.fetchArtworkDetail(objectID: objectID, context: modelContext) // ✅ 加载作品
         }
         .sheet(isPresented: $showTagSelector) {
             tagSelectionSheet()
@@ -280,6 +281,9 @@ struct ArtworkDetailView: View {
     private func confirmCustomTag() {
         guard !customTagName.isEmpty else { return }
         let newTag = FavoriteTag(emoji: "🔖", name: customTagName)
+        let tagModel = UserTag(name: newTag.name, emoji: newTag.emoji)
+        
+        modelContext.insert(tagModel)
         Task {
             await viewModel.toggleFavorite(with: newTag, context: modelContext)
         }

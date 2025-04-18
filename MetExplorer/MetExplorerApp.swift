@@ -10,7 +10,7 @@ struct MetExplorerApp: App {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(for: FavoriteItem.self) // ✅ 添加这行
+        .modelContainer(for: [FavoriteItem.self, UserTag.self]) // ✅ 添加这行
     }
 }
 
