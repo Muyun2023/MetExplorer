@@ -9,12 +9,12 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         TabView {
-            // 🔍 Tab 1: Department search
+            // Tab 1: Department search
             NavigationStack {
                 DepartmentListView()
             }
             .tabItem {
-                Label("Find", systemImage: "magnifyingglass")
+                Label("Explore", systemImage: "magnifyingglass")
             }
             
             // Tab 2: User's collection of artworks

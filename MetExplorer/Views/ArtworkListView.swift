@@ -32,6 +32,7 @@ struct ArtworkListView: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding(.horizontal)
                 .padding(.top, 6)
+                .padding(.bottom,6)
 
             // Filter Picker
             Picker("Filter By", selection: $selectedFilter) {
@@ -41,7 +42,8 @@ struct ArtworkListView: View {
             }
             .pickerStyle(.segmented)
             .padding(.horizontal, 16)
-            .padding(.bottom, 2)
+            .padding(.top, 6)
+            .padding(.bottom,6)
 
             // Artwork List
             List {
@@ -60,11 +62,11 @@ struct ArtworkListView: View {
                             .frame(width: 60, height: 60)
                             .cornerRadius(8)
 
-                            VStack(alignment: .leading, spacing: 4) {
+                            VStack(alignment: .leading, spacing: 6) {
                                 HTMLText(html: artwork.title)
-                                    .font(.title3)
-                                    .lineLimit(nil)
-                                    .fixedSize(horizontal: false, vertical: true)
+                                    .font(.title3.bold())
+                                    .foregroundColor(.primary)
+                                    .lineLimit(2)
 
                                 if !artwork.artistDisplayName.isEmpty {
                                     Text(artwork.artistDisplayName)
@@ -79,11 +81,12 @@ struct ArtworkListView: View {
                                 }
                             }
                         }
-                        .padding(.vertical, 8)
+                        .padding(.vertical, 6)
                     }
+
                 }
             }
-
+            
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     ShuffledButton {

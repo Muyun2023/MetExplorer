@@ -74,7 +74,7 @@ struct ArtworkDetailView: View {
 
                 // Display artwork details
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(artwork.title)
+                    HTMLText(html: artwork.title)
                         .font(.title3.bold())
 
                     if !artwork.artistDisplayName.isEmpty {

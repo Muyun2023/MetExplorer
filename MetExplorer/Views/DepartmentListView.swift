@@ -19,7 +19,7 @@ struct DepartmentListView: View {
                     HStack {
                         Image(iconName(for: department))
                             .resizable()
-                            .frame(width: 40, height: 40)
+                            .frame(width: 50, height: 50)
                             .font(.title)
                             .padding()
 
@@ -37,6 +37,8 @@ struct DepartmentListView: View {
                         RoundedRectangle(cornerRadius: 12)
                             .fill(Color.white)
                             .shadow(radius: 5)
+                    .cornerRadius(12)
+                    .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
                     )
                     .padding(.vertical, 4)
                 }
