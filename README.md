@@ -72,4 +72,33 @@
 
   ## Code Stats
   ### Total Lines of Code
-  2046
+  2108
+
+## 📸 App Screenshots
+
+<table>
+  <tr>
+    <td><img src="Screenshots/Department.png" width="200px"/></td>
+    <td><img src="Screenshots/Artwork List.png" width="200px"/></td>
+    <td><img src="Screenshots/Artwork Filter.png" width="200px"/></td>
+    <td><img src="Screenshots/Artwork Search.png" width="200px"/></td>
+  </tr>
+  <tr>
+    <td><img src="Screenshots/Artwork Detail 1.png" width="200px"/></td>
+    <td><img src="Screenshots/Artwork Detail 2.png" width="200px"/></td>
+    <td><img src="Screenshots/Artwork Detail 3.png" width="200px"/></td>
+    <td><img src="Screenshots/Artwork Detail 4.png" width="200px"/></td>
+  </tr>
+  <tr>
+    <td><img src="Screenshots/Add to Collection.png" width="200px"/></td>
+    <td><img src="Screenshots/Custom Tag.png" width="200px"/></td>
+    <td><img src="Screenshots/Collection Without Artwork.png" width="200px"/></td>
+    <td><img src="Screenshots/Collection.png" width="200px"/></td>
+  </tr>
+  <tr>
+    <td><img src="Screenshots/Tag Artworks.png" width="200px"/></td>
+    <td><img src="Screenshots/Error Handle 1.png" width="200px"/></td>
+    <td><img src="Screenshots/Error Handle 2.png" width="200px"/></td>
+    <td><img src="Screenshots/App.png" width="200px"/></td>
+  </tr>
+</table>
