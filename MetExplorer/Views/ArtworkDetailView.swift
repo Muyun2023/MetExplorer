@@ -1,4 +1,4 @@
-//  ArtworkDetailView.swift
+//  Views/ArtworkDetailView.swift
 //  MetExplorer
 
 import SwiftUI
@@ -6,17 +6,14 @@ import SwiftData
 
 struct ArtworkDetailView: View {
     @Environment(\.modelContext) private var modelContext
-    @State private var viewModel = ArtworkDetailViewModel()
-    
     let objectID: Int
-    
+    @State private var viewModel = ArtworkDetailViewModel()
     @State private var showTagSelector = false
     @State private var showCustomTagInput = false
     @State private var customTagName = ""
     @State private var isImageFullScreen = false
-    
     @State private var refreshToggle = false
-    
+
     var body: some View {
         ZStack {
             if let artwork = viewModel.artwork {
@@ -41,8 +38,8 @@ struct ArtworkDetailView: View {
             }
         }
         .task {
-            await viewModel.loadUserTags(from: modelContext) // ✅ 加载标签（新的）
-            await viewModel.fetchArtworkDetail(objectID: objectID, context: modelContext) // ✅ 加载作品
+            await viewModel.loadUserTags(from: modelContext)
+            await viewModel.fetchArtworkDetail(objectID: objectID, context: modelContext)
         }
         .sheet(isPresented: $showTagSelector) {
             tagSelectionSheet()
@@ -53,10 +50,11 @@ struct ArtworkDetailView: View {
             Button("Cancel", role: .cancel) { customTagName = "" }
         }
     }
-    
+
     private func detailContentView(artwork: Artwork) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
+                // Display artwork image with tap-to-zoom
                 AsyncImage(url: URL(string: artwork.primaryImage)) { phase in
                     if let image = phase.image {
                         image
@@ -65,34 +63,31 @@ struct ArtworkDetailView: View {
                             .cornerRadius(12)
                             .onTapGesture { isImageFullScreen = true }
                     } else if phase.error != nil {
-                        Color.gray
-                            .frame(height: 300)
-                            .overlay {
-                                Image(systemName: "photo")
-                                    .font(.largeTitle)
-                            }
+                        Color.gray.frame(height: 300).overlay {
+                            Image(systemName: "photo")
+                                .font(.largeTitle)
+                        }
                     } else {
-                        ProgressView()
-                            .frame(height: 300)
+                        ProgressView().frame(height: 300)
                     }
                 }
-                
+
+                // Display artwork details
                 VStack(alignment: .leading, spacing: 8) {
                     Text(artwork.title)
                         .font(.title3.bold())
-                    
+
                     if !artwork.artistDisplayName.isEmpty {
                         Text(artwork.artistDisplayName)
                             .font(.headline)
                             .foregroundColor(.secondary)
                     }
-                    
+
                     Divider()
-                    
                     infoRow(label: "Date", value: artwork.objectDate)
                     infoRow(label: "Medium", value: artwork.medium)
                     infoRow(label: "Culture", value: artwork.culture)
-                    
+
                     if !artwork.descriptionText.isEmpty {
                         Divider()
                         Text("About This Artwork")
@@ -101,18 +96,16 @@ struct ArtworkDetailView: View {
                             .font(.subheadline)
                     }
                 }
-                
-                //Button(action: { showTagSelector = true }) {
-                Button(action: {
-                    showTagSelector = true
-                }) {
+
+                // Tag/collection button
+                Button(action: { showTagSelector = true }) {
                     let idString = String(objectID)
                     let savedTagName = (try? modelContext.fetch(
                         FetchDescriptor<FavoriteItem>(
                             predicate: #Predicate { $0.objectIDString == idString }
                         )
-                    ).first?.tagName) ?? nil
-                    
+                    ).first?.tagName)
+
                     HStack {
                         if let tag = savedTagName {
                             Text("Tagged as \(tag)")
@@ -146,23 +139,21 @@ struct ArtworkDetailView: View {
             .background(Color.black.ignoresSafeArea())
         }
     }
-    
+
     private func infoRow(label: String, value: String) -> some View {
-        if !value.isEmpty {
-            return AnyView(
-                HStack(alignment: .top) {
-                    Text("\(label):")
-                        .bold()
-                        .frame(width: 80, alignment: .leading)
-                    Text(value)
-                    Spacer()
-                }
-                .font(.subheadline)
-                .padding(.vertical, 2)
-            )
-        } else {
-            return AnyView(EmptyView())
-        }
+        guard !value.isEmpty else { return AnyView(EmptyView()) }
+
+        return AnyView(
+            HStack(alignment: .top) {
+                Text("\(label):")
+                    .bold()
+                    .frame(width: 80, alignment: .leading)
+                Text(value)
+                Spacer()
+            }
+            .font(.subheadline)
+            .padding(.vertical, 2)
+        )
     }
 
     private func tagSelectionSheet() -> some View {
@@ -171,20 +162,22 @@ struct ArtworkDetailView: View {
                 Section("My Tags") {
                     ForEach(viewModel.recentTags, id: \.name) { tag in
                         HStack {
+                            // Tag selection button
                             Button {
                                 Task {
                                     await viewModel.toggleFavorite(with: tag, context: modelContext)
                                 }
+
                                 let idString = String(objectID)
                                 if let existing = try? modelContext.fetch(
                                     FetchDescriptor<FavoriteItem>(
                                         predicate: #Predicate { $0.objectIDString == idString }
                                     )
                                 ).first {
-                                    existing.tagName = tag.name  // ✅ 如果已存在，更新标签名
+                                    existing.tagName = tag.name
                                 } else {
                                     let newItem = FavoriteItem(objectID: objectID, tagName: tag.name)
-                                    modelContext.insert(newItem) // ✅ 如果不存在，才插入新项
+                                    modelContext.insert(newItem)
                                 }
 
                                 try? modelContext.save()
@@ -195,27 +188,21 @@ struct ArtworkDetailView: View {
                                     Text(tag.emoji)
                                     Text(tag.name)
                                     Spacer()
-                                    let _ = refreshToggle  // ✅ 加这行触发视图更新
+                                    let _ = refreshToggle
                                     let idString = String(objectID)
                                     let savedTagName = (try? modelContext.fetch(
                                         FetchDescriptor<FavoriteItem>(
                                             predicate: #Predicate { $0.objectIDString == idString }
                                         )
-                                    ).first?.tagName) ?? nil
+                                    ).first?.tagName)
 
                                     if savedTagName == tag.name {
                                         Image(systemName: "checkmark")
                                     }
                                 }
                             }
-                            
-//                            Button {
-//                                viewModel.deleteTag(tag)
-//                            } label: {
-//                                Image(systemName: "trash")
-//                                    .foregroundColor(.red)
-//                            }
-                            // when delete the tag directly and artworks will also been deleted from tag
+
+                            // Tag deletion button
                             Button {
                                 let idString = String(objectID)
                                 if let current = try? modelContext.fetch(
@@ -225,7 +212,7 @@ struct ArtworkDetailView: View {
                                 ).first, current.tagName == tag.name {
                                     modelContext.delete(current)
                                     try? modelContext.save()
-                                    refreshToggle.toggle() // ✅ 立即刷新 CollectionView
+                                    refreshToggle.toggle()
                                 }
                                 viewModel.deleteTag(tag)
                             } label: {
@@ -236,7 +223,8 @@ struct ArtworkDetailView: View {
                         }
                     }
                 }
-                
+
+                // Custom tag creation
                 Section {
                     Button {
                         showCustomTagInput = true
@@ -245,7 +233,8 @@ struct ArtworkDetailView: View {
                         Label("Custom Tag", systemImage: "plus")
                     }
                 }
-                
+
+                // Remove from collection
                 if viewModel.isCollected {
                     Section {
                         Button(role: .destructive) {
@@ -261,14 +250,13 @@ struct ArtworkDetailView: View {
                             ).first {
                                 modelContext.delete(existing)
                                 try? modelContext.save()
-                                refreshToggle.toggle() // ✅ 立即刷新 CollectionView
+                                refreshToggle.toggle()
                             }
 
                             showTagSelector = false
                         } label: {
                             Label("Remove from Collection", systemImage: "trash")
                         }
-
                     }
                 }
             }
@@ -277,17 +265,18 @@ struct ArtworkDetailView: View {
         }
         .presentationDetents([.medium])
     }
-    
+
     private func confirmCustomTag() {
         guard !customTagName.isEmpty else { return }
+
         let newTag = FavoriteTag(emoji: "🔖", name: customTagName)
         let tagModel = UserTag(name: newTag.name, emoji: newTag.emoji)
-        
         modelContext.insert(tagModel)
+
         Task {
             await viewModel.toggleFavorite(with: newTag, context: modelContext)
         }
-        
+
         let idString = String(objectID)
         if let existing = try? modelContext.fetch(
             FetchDescriptor<FavoriteItem>(
@@ -305,19 +294,3 @@ struct ArtworkDetailView: View {
         refreshToggle.toggle()
     }
 }
-
-    
-//    private func confirmCustomTag() {
-//        guard !customTagName.isEmpty else { return }
-//        let newTag = FavoriteTag(emoji: "🔖", name: customTagName)
-//        viewModel.toggleFavorite(with: newTag)
-//        customTagName = ""
-//    }
-    
-
-
-//#Preview {
-//    NavigationStack {
-//        ArtworkDetailView(objectID: 436535)
-//    }
-//}

@@ -1,7 +1,5 @@
-//
 //  HTMLText.swift
 //  MetExplorer
-//
 
 import SwiftUI
 

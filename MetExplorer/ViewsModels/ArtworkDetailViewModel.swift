@@ -16,6 +16,7 @@ final class ArtworkDetailViewModel {
     private(set) var selectedTag: FavoriteTag?
     private(set) var recentTags: [FavoriteTag] = demoTags
 
+    /// Fetch artwork detail by object ID and update state.
     func fetchArtworkDetail(objectID: Int, context: ModelContext) async {
         guard !isLoading else { return }
         isLoading = true
@@ -31,6 +32,7 @@ final class ArtworkDetailViewModel {
         isLoading = false
     }
 
+    /// Toggle favorite state with a given tag.
     func toggleFavorite(with tag: FavoriteTag, context: ModelContext) async {
         isCollected = true
         selectedTag = tag
@@ -38,13 +40,15 @@ final class ArtworkDetailViewModel {
         await checkCollectionStatus(context: context)
     }
 
+    /// Remove favorite status from the current artwork.
     func removeFavorite(context: ModelContext) async {
         isCollected = false
         selectedTag = nil
         await checkCollectionStatus(context: context)
     }
 
-    private func checkCollectionStatus(context: ModelContext) async{
+    /// Check if the current artwork has been favorited.
+    private func checkCollectionStatus(context: ModelContext) async {
         guard let artwork else { return }
 
         let idString = String(artwork.objectID)
@@ -66,6 +70,7 @@ final class ArtworkDetailViewModel {
         }
     }
 
+    /// Update tag list so most recent tag appears first.
     private func updateRecentTags(_ newTag: FavoriteTag) {
         recentTags.removeAll { $0 == newTag }
         recentTags.insert(newTag, at: 0)
@@ -74,6 +79,7 @@ final class ArtworkDetailViewModel {
         }
     }
 
+    /// Delete tag from the UI state if it matches.
     func deleteTag(_ tag: FavoriteTag) {
         recentTags.removeAll { $0 == tag }
         if selectedTag == tag {
@@ -82,11 +88,13 @@ final class ArtworkDetailViewModel {
         }
     }
 
+    /// Handle error when loading artwork data.
     private func handleError(_ error: Error) {
         errorMessage = error.localizedDescription
         artwork = nil
     }
-    // ensure the favorite tag not really been deleted and will show again when user re-click my collection button
+
+    /// Always ensure "Favorite" tag is visible in recentTags.
     func ensureFavoriteExists() {
         let favorite = FavoriteTag(emoji: "❤️", name: "Favorite")
         if !recentTags.contains(favorite) {
@@ -96,82 +104,20 @@ final class ArtworkDetailViewModel {
             }
         }
     }
-    
+
+    /// Load user's custom tags from SwiftData storage.
     func loadUserTags(from context: ModelContext) async {
-            do {
-                let items = try context.fetch(FetchDescriptor<UserTag>())
-                let tags = items.map { FavoriteTag(emoji: $0.emoji, name: $0.name) }
-                self.recentTags = tags
-            } catch {
-                print("Failed to load user tags: \(error)")
-            }
-            ensureFavoriteExists()
+        do {
+            let items = try context.fetch(FetchDescriptor<UserTag>())
+            let tags = items.map { FavoriteTag(emoji: $0.emoji, name: $0.name) }
+            self.recentTags = tags
+        } catch {
+            print("Failed to load user tags: \(error)")
         }
+        ensureFavoriteExists()
+    }
 }
 
 private let demoTags = [
-    FavoriteTag(emoji: "❤️", name: "Favorite"),
+    FavoriteTag(emoji: "❤️", name: "Favorite")
 ]
-
-
-/**import Foundation
-import Observation
-
-@Observable
-class ArtworkDetailViewModel {
-    var artwork: Artwork? = nil
-    var isLoading: Bool = false
-    
-    var isCollected = false
-    var selectedTag: FavoriteTag?
-    var recentTags: [FavoriteTag] = [
-        FavoriteTag(emoji: "❤️", name: "Favorite"),
-        FavoriteTag(emoji: "🌟", name: "Highlight"),
-        FavoriteTag(emoji: "🎨 ", name: "Inspiration")
-    ]
-    
-    func fetchArtworkDetail(objectID: Int) async {
-        isLoading = true
-        do {
-            let result = try await MetMuseumAPI.shared.fetchArtwork(by: objectID)
-            artwork = result
-        } catch {
-            print("Error loading detail: \(error)")
-        }
-        isLoading = false
-    }
-    
-    func toggleFavorite(with tag: FavoriteTag) {
-        isCollected = true
-        selectedTag = tag
-        updateRecentTags(tag)
-    }
-    
-    func removeFavorite() {
-        isCollected = false
-        selectedTag = nil
-    }
-    
-    func updateRecentTags(_ newTag: FavoriteTag) {
-        recentTags.removeAll { $0 == newTag }
-        recentTags.insert(newTag, at: 0)
-        if recentTags.count > 5 {
-            recentTags = Array(recentTags.prefix(5))
-        }
-    }
-    
-    func deleteCustomTag(_ tag: FavoriteTag) {
-        recentTags.removeAll { $0 == tag }
-        if selectedTag == tag {
-            selectedTag = nil
-            isCollected = false
-        }
-    }
-    
-}
- */
-
-
-
-
-

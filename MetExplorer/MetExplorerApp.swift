@@ -4,13 +4,14 @@
 import SwiftUI
 import SwiftData
 
+/// Entry point for the MetExplorer app
 @main
 struct MetExplorerApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(for: [FavoriteItem.self, UserTag.self]) // ✅ 添加这行
+        // Enable SwiftData for FavoriteItem and UserTag models
+        .modelContainer(for: [FavoriteItem.self, UserTag.self])
     }
 }
-

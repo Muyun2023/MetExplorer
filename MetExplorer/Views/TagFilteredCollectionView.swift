@@ -1,15 +1,17 @@
-//  TagFilteredCollectionView.swift
+//  Views/TagFilteredCollectionView.swift
 //  MetExplorer
 
 import SwiftUI
 import SwiftData
 
+/// Displays artworks filtered by a specific tag.
 struct TagFilteredCollectionView: View {
     let tag: String
+    
     @Query private var items: [FavoriteItem]
     @State private var artworks: [Artwork] = []
     @State private var isLoading = false
-    @State private var didLoad = false  // ✅ 确保只加载一次
+    @State private var didLoad = false  // Prevent multiple loads
 
     var body: some View {
         List {
@@ -58,7 +60,6 @@ struct TagFilteredCollectionView: View {
             }
         }
         .onAppear {
-            // ✅ 避免反复调用
             if !didLoad {
                 didLoad = true
                 Task {
@@ -68,9 +69,13 @@ struct TagFilteredCollectionView: View {
         }
     }
 
+    /// Loads artworks from the Met API based on filtered FavoriteItems with the given tag.
     private func loadArtworks() async {
         isLoading = true
+        
+        // Filter saved favorites by tag
         let matchingItems = items.filter { $0.tagName == tag }
+        
         var results: [Artwork] = []
         for item in matchingItems {
             if let id = Int(item.objectIDString) {
@@ -82,7 +87,9 @@ struct TagFilteredCollectionView: View {
                 }
             }
         }
+        
         artworks = results
         isLoading = false
     }
 }
+

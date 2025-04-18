@@ -1,22 +1,21 @@
-//  Department.swift
-//  MetExplorer
+// Department.swift
+// MetExplorer
 
 import Foundation
 
-// 添加 Hashable 协议一致性
+/// Represents a department within the Met Museum.
 struct Department: Codable, Identifiable, Hashable {
     let departmentId: Int
     let displayName: String
     var id: Int { departmentId }
-    
-    // 实现 Hashable 协议（自动合成即可）
+
+    // Conforms to Hashable by combining department ID
     func hash(into hasher: inout Hasher) {
         hasher.combine(departmentId)
     }
 }
 
-// 保持原有 DepartmentResponse
+/// Response wrapper for department API call
 struct DepartmentResponse: Codable {
     let departments: [Department]
 }
-

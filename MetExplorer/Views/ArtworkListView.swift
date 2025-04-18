@@ -7,33 +7,33 @@ struct ArtworkListView: View {
     @State private var viewModel = ArtworkListViewModel()
     let departmentId: Int
     let departmentName: String
-    
+
     enum FilterOption: String, CaseIterable {
         case none = "All"
         case culture = "By Culture"
         case medium = "By Medium"
     }
-    
     @State private var selectedFilter: FilterOption = .none
     @State private var showErrorAlert = false
     @State private var searchText = ""
-    
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 4){
+        VStack(alignment: .leading, spacing: 4) {
+            // Department title
             Text(departmentName)
                 .font(.title3.bold())
                 .multilineTextAlignment(.leading)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal)
                 .padding(.top, 8)
-            
-            //.Searchable not work probably due to simulator bug,repalce with TextFile
+
+            // Search bar (TextField used due to known simulator bug with `.searchable`)
             TextField("Search manually", text: $searchText)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding(.horizontal)
-                .padding(.top,6)
-            
-            // 过滤控件
+                .padding(.top, 6)
+
+            // Filter Picker
             Picker("Filter By", selection: $selectedFilter) {
                 ForEach(FilterOption.allCases, id: \.self) { option in
                     Text(option.rawValue).tag(option)
@@ -42,8 +42,8 @@ struct ArtworkListView: View {
             .pickerStyle(.segmented)
             .padding(.horizontal, 16)
             .padding(.bottom, 2)
-                
-            // 艺术品列表
+
+            // Artwork List
             List {
                 ForEach(currentFilteredArtworks) { artwork in
                     NavigationLink(destination: ArtworkDetailView(objectID: artwork.objectID)) {
@@ -59,21 +59,19 @@ struct ArtworkListView: View {
                             }
                             .frame(width: 60, height: 60)
                             .cornerRadius(8)
-                            
+
                             VStack(alignment: .leading, spacing: 4) {
                                 HTMLText(html: artwork.title)
                                     .font(.title3)
-                                    //.lineLimit(2)
-                                // in case title is too long,show whole title for user
                                     .lineLimit(nil)
                                     .fixedSize(horizontal: false, vertical: true)
-                                
+
                                 if !artwork.artistDisplayName.isEmpty {
                                     Text(artwork.artistDisplayName)
                                         .font(.subheadline)
                                         .foregroundColor(.secondary)
                                 }
-                                
+
                                 if selectedFilter != .none {
                                     Text(groupingText(for: artwork))
                                         .font(.caption)
@@ -85,11 +83,7 @@ struct ArtworkListView: View {
                     }
                 }
             }
-//            .navigationTitle(departmentName)
-//            .navigationBarTitleDisplayMode(.inline)
-            
-//            .searchable(text: $searchText, prompt: "Search artworks")
-//            .onChange(of: searchText) { _, _ in }
+
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     ShuffledButton {
@@ -97,6 +91,7 @@ struct ArtworkListView: View {
                     }
                 }
             }
+
             .alert(
                 "Load Failed",
                 isPresented: $showErrorAlert,
@@ -109,6 +104,7 @@ struct ArtworkListView: View {
                 },
                 message: { Text($0) }
             )
+
             .overlay {
                 if viewModel.isLoading {
                     ProgressView("Loading...")
@@ -120,49 +116,39 @@ struct ArtworkListView: View {
                     )
                 }
             }
+
             .task {
                 if viewModel.artworks.isEmpty {
                     await viewModel.fetchArtworks(departmentId: departmentId)
                 }
             }
+
             .onChange(of: viewModel.errorMessage) { _, newValue in
                 showErrorAlert = (newValue != nil)
             }
         }
     }
-    
-    private var currentFilteredArtworks: [Artwork] {
-//        let baseList = viewModel.filteredArtworks(searchText: searchText)
-        let baseList = searchText.isEmpty
-                ? viewModel.artworks
-                : viewModel.artworks.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
 
-//        print("🔍 current search key words：\(searchText)")
-//        print("🔍 results number：\(baseList.count)")
-        
+    // Filter artworks based on search text and selected filter
+    private var currentFilteredArtworks: [Artwork] {
+        let baseList = searchText.isEmpty
+            ? viewModel.artworks
+            : viewModel.artworks.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+
         switch selectedFilter {
-            case .none:
-                return baseList
-//            case .culture:
-//                return baseList
-//                    .filter { !$0.culture.isEmpty }
-//                    .sorted { $0.culture < $1.culture }
+        case .none:
+            return baseList
         case .culture:
             let filtered = baseList.filter {
-                let trimmed = $0.culture.trimmingCharacters(in: .whitespacesAndNewlines)
-                print("🎯 culture = '\(trimmed)'")
-                return !trimmed.isEmpty
+                !$0.culture.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
             }
-            print("🧮 Culture matched artworks: \(filtered.count)")
             return filtered.sorted { $0.culture < $1.culture }
-
-            case .medium:
-                return baseList
-                    .filter { !$0.medium.isEmpty }
-                    .sorted { $0.medium < $1.medium }
-            }
+        case .medium:
+            return baseList.filter { !$0.medium.isEmpty }
+                .sorted { $0.medium < $1.medium }
         }
-    
+    }
+
     private func groupingText(for artwork: Artwork) -> String {
         switch selectedFilter {
         case .culture:
