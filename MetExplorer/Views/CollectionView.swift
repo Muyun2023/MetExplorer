@@ -1,3 +1,6 @@
+// Views/CollectionView.swift
+// MetExplorer
+
 import SwiftUI
 import SwiftData
 
@@ -25,10 +28,6 @@ struct CollectionView: View {
             VStack(spacing: 12) {
                 // Header
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("My Collection")
-                        .font(.largeTitle.bold())
-                        .padding(.horizontal)
-
                     TextField("Search favorites", text: $searchText)
                         .textFieldStyle(.roundedBorder)
                         .padding(.horizontal)
@@ -97,6 +96,7 @@ struct CollectionView: View {
                     }
                 }
                 .listStyle(.insetGrouped)
+                .navigationTitle("My Collection")
             }
             .refreshable {
                 await viewModel.refreshFavorites(context: modelContext)

@@ -51,7 +51,7 @@ struct TagFilteredCollectionView: View {
                 }
             }
         }
-        .navigationTitle("“\(tag)” Collection")
+        .navigationTitle(tag)
         .navigationBarTitleDisplayMode(.inline)
         .overlay {
             if filteredItems.isEmpty {
