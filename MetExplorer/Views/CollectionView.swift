@@ -116,7 +116,7 @@ struct CollectionView: View {
 
             do {
                 let allFavorites = try modelContext.fetch(FetchDescriptor<FavoriteItem>())
-                print("✅ Current SwiftData has \(allFavorites.count) 项")
+                print("✅ Current SwiftData has \(allFavorites.count) ")
                 for item in allFavorites {
                     print("🎯 Save objectID: \(item.objectIDString), tag: \(item.tagName)")
                 }
