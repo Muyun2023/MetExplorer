@@ -76,8 +76,6 @@
 
 ## 📸 App Screenshots
 
-## 📸 App Screenshots
-
 <table>
   <tr>
     <td align="center" style="padding:15px; background:#ffffff">
