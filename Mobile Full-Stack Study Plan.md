@@ -48,11 +48,6 @@
   1. 原生开发（iOS: Swift / Objective-C，Android: Kotlin / Java）
   2. 跨平台开发（Flutter、React Native 等）
   3. 混合开发（WebView + 原生壳）
-Mobile 开发
-├── iOS 开发
-├── Android 开发
-└── 跨平台开发
-
 
 ---
 
