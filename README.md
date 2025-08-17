@@ -63,12 +63,17 @@
   2. Ensure the simulator is set to iOS 18.4 or higher
   3. Run the app on iPhone 16 simulator (recommended)
 
-  ## 🧭 TODO List
-  - Improve the **My Collection** page with:
-    - Artwork sharing or export functionality
-    - Sorting and multi-tag filtering
-    - Visual indicators of tag categories
-  - Integrate **Wikipedia**, **ChatGPT API**, or similar sources to generate more **context-rich, interesting** artwork descriptions based on user preferences
+  ## 🧭 Planned Upgrades
+- **My Collection**: sorting, multi-tag filtering, visual tag indicators  
+- **Artwork sharing & export**: PDF, social cards  
+- **Context enrichment**: Wikipedia integration, ChatGPT AI-generated descriptions  
+- **Image pipeline**: skeleton loading, caching, progressive loading  
+- **Accessibility**: Dark Mode, Dynamic Type, VoiceOver support  
+- **System integration**: WidgetKit, App Intents (Siri/Shortcuts), Core Spotlight  
+- **Collection insights**: simple analytics with Swift Charts  
+- **Cross-device sync**: iCloud / CloudKit for favorites and tags  
+- **Advanced features (optional)**: MapKit for artwork locations, ARKit for real-world previews, TipKit onboarding
+
 
   ## Code Stats
   ### Total Lines of Code
